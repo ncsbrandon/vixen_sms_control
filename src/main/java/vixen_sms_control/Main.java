@@ -3,8 +3,6 @@ package vixen_sms_control;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
-import java.util.Properties;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,11 +19,16 @@ public class Main {
 	public static final String PLAY_MENU = "Tune your radio to 88.3 FM and then select a song:\n"
 										 + "1 - Wizards in Winter\n"
 										 + "2 - Red and White From State\n"
-										 + "3 - Resonance";
+										 + "3 - Resonance\n"
+										 + "4 - Test pattern";
+	public static final String PLAY_1_REQUEST = "1";
 	public static final String PLAY_1_REPLY = "Wizards in Winter - Trans-Siberian Orchestra";
+	public static final String PLAY_2_REQUEST = "2";
 	public static final String PLAY_2_REPLY = "Red and White From State - NC State Marching Band";
+	public static final String PLAY_3_REQUEST = "3";
 	public static final String PLAY_3_REPLY = "Resonance - Home";
-	public static final String PLAY_4_REPLY = "Test";
+	public static final String PLAY_4_REQUEST = "4";
+	public static final String PLAY_4_REPLY = "Test pattern";
 	public static final String PLAY_GEN_REPLY = "Merry Christmas from the Whitakers!";
 
 	public static void main(String[] args) {
@@ -40,13 +43,13 @@ public class Main {
 
 			if (0 == requestBody.compareToIgnoreCase(PLAY_REQUEST)) {
 				return createReply(PLAY_MENU);
-			} else if (0 == requestBody.compareTo("1")) {
+			} else if (0 == requestBody.compareTo(PLAY_1_REQUEST)) {
 				return createReply(PLAY_1_REPLY);
-			} else if (0 == requestBody.compareTo("2")) {
+			} else if (0 == requestBody.compareTo(PLAY_2_REQUEST)) {
 				return createReply(PLAY_2_REPLY);
-			} else if (0 == requestBody.compareTo("3")) {
+			} else if (0 == requestBody.compareTo(PLAY_3_REQUEST)) {
 				return createReply(PLAY_3_REPLY);
-			} else if (0 == requestBody.compareTo("4")) {
+			} else if (0 == requestBody.compareTo(PLAY_4_REQUEST)) {
 				return createReply(PLAY_4_REPLY);
 			}
 
@@ -54,15 +57,17 @@ public class Main {
 		});
 	}
 	
-	
-
-	public static void sendMessage(Properties prop) {
-		Twilio.init(prop.getProperty("ACCOUNT_SID"), prop.getProperty("AUTH_TOKEN"));
+	public static void sendMessage(String toPhone, String messageText) {
+		String sid = AppConfig.getInstance().get(AppConfig.CONFIG_ACCOUNT_SID);
+		String auth = AppConfig.getInstance().get(AppConfig.CONFIG_AUTH_TOKEN);
+		String fromPhone = AppConfig.getInstance().get(AppConfig.CONFIG_FROM_PHONE);
+		
+		Twilio.init(sid, auth);
 
 		com.twilio.rest.api.v2010.account.Message message = com.twilio.rest.api.v2010.account.Message
-				.creator(new PhoneNumber("+14159352345"), // to
-						new PhoneNumber("+12569523125"), // from
-						"Where's Wallace?")
+				.creator(new PhoneNumber(toPhone),
+						new PhoneNumber(fromPhone),
+						messageText)
 				.create();
 
 		System.out.println(message.getSid());

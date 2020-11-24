@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Poster {
 
-	private static Logger logger = LoggerFactory.getLogger(Main.class);
+	private static Logger logger = LoggerFactory.getLogger(Poster.class.getSimpleName());
 
 	public void post() throws IOException, InterruptedException {
 		var values = new HashMap<String, String>() {
@@ -26,7 +26,7 @@ public class Poster {
 			}
 		};
 
-		var objectMapper = new ObjectMapper();
+		ObjectMapper objectMapper = new ObjectMapper();
 		String requestBody = objectMapper.writeValueAsString(values);
 
 		HttpClient client = HttpClient.newHttpClient();
@@ -37,6 +37,6 @@ public class Poster {
 
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-		logger.debug(response.body());
+		logger.info(response.body());
 	}
 }

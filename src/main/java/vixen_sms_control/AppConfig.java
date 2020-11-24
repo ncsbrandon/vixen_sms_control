@@ -7,17 +7,30 @@ import java.util.Properties;
 
 public class AppConfig {
 
-	public Properties loadProperties() throws IOException {
-		Properties prop = new Properties();
-		String propFileName = "config.properties";
+	public static final String CONFIG_ACCOUNT_SID = "ACCOUNT_SID";
+	public static final String CONFIG_AUTH_TOKEN = "AUTH_TOKEN";
+	public static final String CONFIG_FROM_PHONE = "FROM_PHONE";
+	
+	private static final String PROP_FILENAME = "config.properties";
+	private Properties prop = new Properties();
 
-		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
+	// singleton
+	private static AppConfig instance = new AppConfig();
+	private AppConfig() {}
+	public static AppConfig getInstance() {
+		return instance;
+	}
 
+	public void load() throws IOException {
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(PROP_FILENAME);
 		if (inputStream != null) {
 			prop.load(inputStream);
 		} else {
-			throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+			throw new FileNotFoundException("property file '" + PROP_FILENAME + "' not found in the classpath");
 		}
-		return prop;
+	}
+	
+	public String get(String key) {
+		return prop.getProperty(key);
 	}
 }
