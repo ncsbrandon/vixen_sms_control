@@ -1,19 +1,17 @@
-package twilio_test_2;
+package vixen_sms_control;
+
+import static spark.Spark.get;
+import static spark.Spark.post;
+
+import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.twilio.Twilio;
-import com.twilio.type.PhoneNumber;
 import com.twilio.twiml.MessagingResponse;
 import com.twilio.twiml.messaging.Body;
-
-import static spark.Spark.*;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+import com.twilio.type.PhoneNumber;
 
 public class Main {
 
@@ -56,19 +54,7 @@ public class Main {
 		});
 	}
 	
-	public static Properties loadProperties() throws IOException {
-		Properties prop = new Properties();
-		String propFileName = "config.properties";
-
-		InputStream inputStream = Main.class.getClassLoader().getResourceAsStream(propFileName);
-
-		if (inputStream != null) {
-			prop.load(inputStream);
-		} else {
-			throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-		}
-		return prop;
-	}
+	
 
 	public static void sendMessage(Properties prop) {
 		Twilio.init(prop.getProperty("ACCOUNT_SID"), prop.getProperty("AUTH_TOKEN"));
