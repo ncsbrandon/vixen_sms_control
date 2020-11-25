@@ -5,12 +5,10 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class VixenControl {
@@ -18,10 +16,8 @@ public class VixenControl {
 	private static Logger logger = LoggerFactory.getLogger(VixenControl.class.getSimpleName());
 
 	private String url = "";
-	private String lastName = "";
-	private String lastFile = "";
 	private ObjectMapper om = new ObjectMapper();
-	private Root root;
+	private Root active;
 
 	public VixenControl(String url) {
 		this.url = url;
@@ -39,16 +35,20 @@ public class VixenControl {
 		} catch (IOException | InterruptedException e) {
 			logger.error("play failure", e);
 		}
-		
-		lastName = name;
-		lastFile = file;
 	}
-
-	public void stop() {
+	
+	public void stopActive() {
+		status();
+		
+		if(active != null && active.sequence != null && active.sequence.name.length() > 0)
+			stop(active.sequence.name, active.sequence.fileName);
+	}
+	
+	private void stop(String name, String filename) {
 		StringBuilder requestBody = new StringBuilder();
-		requestBody.append("Name=" + lastName);
+		requestBody.append("Name=" + name);
 		requestBody.append("&");
-		requestBody.append("FileName=" + lastFile);
+		requestBody.append("FileName=" + filename);
 		
 		try {
 			post("api/play/stopSequence", requestBody.toString());
@@ -58,10 +58,29 @@ public class VixenControl {
 	}
 	
 	public void status() {
+		String response;
 		try {
-			get("api/play/status");
+			response = get("api/play/status");
 		} catch (IOException | InterruptedException e) {
 			logger.error("stop failure", e);
+			response = "";
+		}
+		
+		// strip the square brackets
+		response = response.substring(1, response.length()-1);
+		
+		// parse the json
+		try {
+			if(response.length() > 0) {
+				active = om.readValue(response, Root.class);
+				logger.info("active song: " + active.toString());
+			} else {
+				active = null;
+				logger.info("no active song");
+			}
+		} catch (Exception e) {
+			active = null;
+			logger.error("status response parse failure", e);
 		}
 	}
 
@@ -95,7 +114,7 @@ public class VixenControl {
 		logger.info("<- " + response.body());
 	}
 	
-	private void get(String page) throws IOException, InterruptedException {
+	private String get(String page) throws IOException, InterruptedException {
 		// build the request
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = HttpRequest.newBuilder()
@@ -112,20 +131,14 @@ public class VixenControl {
 		// send and receive
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-		logger.info("<- " + response.body());
-		if(response.body().length() > 0) {
-			root = om.readValue(response.body(), Root.class);
-		} else {
-			root = new Root();
-		}
-		logger.info(root.toString());
-		
 		// logging
 		logger.info("<- " + response.toString());
 		//Map<String, List<String>> responseHeaders = response.headers().map();
 		//for (Entry<String, List<String>> responseHeader : responseHeaders.entrySet()) {
 		//	logger.info("<- Header Name - " + responseHeader.getKey() + ", Value - " + responseHeader.getValue().toString());
 		//}
-		//logger.info("<- " + response.body());
+		logger.info("<- " + response.body());
+		
+		return response.body();
 	}
 }

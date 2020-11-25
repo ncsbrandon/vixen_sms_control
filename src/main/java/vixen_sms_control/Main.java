@@ -3,6 +3,8 @@ package vixen_sms_control;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
+import java.util.Timer;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +48,7 @@ public class Main {
 	public static final String PLAY_GEN_REPLY = "Merry Christmas from the Whitaker family!";
 
 	private static VixenControl vc = new VixenControl("http://192.168.14.2:8888/");
+	private static Timer idleCheck;
 	
 	public static void main(String[] args) {
 		get("/", (req, res) -> "Hello Web");
@@ -72,6 +75,10 @@ public class Main {
 
 			return createReply(PLAY_GEN_REPLY);
 		});
+		
+		// run an idle check every minute
+		idleCheck = new Timer();
+		idleCheck.schedule(new IdleCheckTask(), 500, 60000);
 	}
 	
 	public static String play(String name, String file, String reply) {
@@ -86,7 +93,7 @@ public class Main {
 	public static String pause(String reply) {
 		(new Thread() {
 			public void run() {
-			    vc.stop();
+			    vc.stopActive();
 			}
 		}).start();
 		return createReply(reply);

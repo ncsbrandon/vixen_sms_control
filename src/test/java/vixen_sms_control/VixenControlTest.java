@@ -23,7 +23,7 @@ public class VixenControlTest {
 
 		poster.status();
 		
-		poster.stop();
+		poster.stopActive();
 		
 		try {
 			Thread.sleep(5000);
