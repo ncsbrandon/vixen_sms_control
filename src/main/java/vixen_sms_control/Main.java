@@ -15,7 +15,7 @@ import com.twilio.type.PhoneNumber;
 
 public class Main {
 
-	private static Logger logger = LoggerFactory.getLogger(Main.class);
+	private static Logger logger = LoggerFactory.getLogger(Main.class.getSimpleName());
 
 	public static final String PLAY_REQUEST = "play";
 	public static final String PLAY_MENU = "Tune your radio to 88.3 FM and then select a song:\n"
@@ -84,7 +84,11 @@ public class Main {
 	public static String play(String name, String file, String reply) {
 		(new Thread() {
 			public void run() {
-			    vc.play(name, file);
+				try {
+					vc.play(name, file);
+				} catch (Exception e) {
+					logger.error("play error", e);
+				}
 			}
 		}).start();
 		return createReply(reply);
@@ -93,7 +97,11 @@ public class Main {
 	public static String pause(String reply) {
 		(new Thread() {
 			public void run() {
-			    vc.stopActive();
+				try {
+					vc.stopActive();
+				} catch (Exception e) {
+					logger.error("pause error", e);
+				}
 			}
 		}).start();
 		return createReply(reply);

@@ -19,26 +19,20 @@ public class VixenControl {
 	private ObjectMapper om = new ObjectMapper();
 	private Root active;
 	
+	public VixenControl(String url) {
+		this.url = url;
+	}
+
 	public boolean isActive() {
 		if(active != null && active.sequence != null && active.sequence.name.length() > 0)
 			return true;
 		
 		return false;
 	}
-
-	public VixenControl(String url) {
-		this.url = url;
-	}
-
+	
 	public void play(String name, String file) {
 		// if there's a currently active song, stop it first
-		status();
-		if(isActive()) {
-			stopActive();
-			try {
-				Thread.sleep(3000);
-			} catch (InterruptedException e1) {}
-		}
+		stopActive();
 			
 		// build the request body
 		StringBuilder requestBody = new StringBuilder();
@@ -59,6 +53,7 @@ public class VixenControl {
 		status();
 		if(isActive()) {
 			stop(active.sequence.name, active.sequence.fileName);
+			
 			try {
 				Thread.sleep(3000);
 			} catch (InterruptedException e1) {}
@@ -87,12 +82,12 @@ public class VixenControl {
 			response = "";
 		}
 		
-		// strip the square brackets
-		response = response.substring(1, response.length()-1);
-		
-		// parse the json
 		try {
 			if(response.length() > 0) {
+				// strip the square brackets
+				response = response.substring(1, response.length()-1);
+				
+				// parse the json
 				active = om.readValue(response, Root.class);
 				logger.info("active song: " + active.toString());
 			} else {
