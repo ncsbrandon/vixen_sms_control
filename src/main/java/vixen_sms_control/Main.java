@@ -19,18 +19,34 @@ public class Main {
 	public static final String PLAY_MENU = "Tune your radio to 88.3 FM and then select a song:\n"
 										 + "1 - Wizards in Winter\n"
 										 + "2 - Red and White From State\n"
-										 + "3 - Resonance\n"
-										 + "4 - Test pattern";
+										 + "3 - Christmas tree";
 	public static final String PLAY_1_REQUEST = "1";
-	public static final String PLAY_1_REPLY = "Wizards in Winter - Trans-Siberian Orchestra";
+	public static final String PLAY_1_REPLY = "Loading Wizards in Winter by Trans-Siberian Orchestra...";
+	public static final String PLAY_1_NAME = "wizards";
+	public static final String PLAY_1_FILE = "C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\wizards.tim";
+	
 	public static final String PLAY_2_REQUEST = "2";
-	public static final String PLAY_2_REPLY = "Red and White From State - NC State Marching Band";
+	public static final String PLAY_2_REPLY = "Loading Red and White From State by NC State Marching Band...";
+	public static final String PLAY_2_NAME = "red_and_white";
+	public static final String PLAY_2_FILE = "C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\red_and_white.tim";
+	
 	public static final String PLAY_3_REQUEST = "3";
-	public static final String PLAY_3_REPLY = "Resonance - Home";
+	public static final String PLAY_3_REPLY = "Loading Christmas tree...";
+	public static final String PLAY_3_NAME = "tree";
+	public static final String PLAY_3_FILE = "C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\tree.tim";
+	
 	public static final String PLAY_4_REQUEST = "4";
-	public static final String PLAY_4_REPLY = "Test pattern";
-	public static final String PLAY_GEN_REPLY = "Merry Christmas from the Whitakers!";
+	public static final String PLAY_4_REPLY = "Loading Test pattern...";
+	public static final String PLAY_4_NAME = "test";
+	public static final String PLAY_4_FILE = "C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\test.tim";
+	
+	public static final String PAUSE_REQUEST = "pause";
+	public static final String PAUSE_REPLY = "Pausing...";
+	
+	public static final String PLAY_GEN_REPLY = "Merry Christmas from the Whitaker family!";
 
+	private static VixenControl vc = new VixenControl("http://192.168.14.2:8888/");
+	
 	public static void main(String[] args) {
 		get("/", (req, res) -> "Hello Web");
 
@@ -43,18 +59,34 @@ public class Main {
 
 			if (0 == requestBody.compareToIgnoreCase(PLAY_REQUEST)) {
 				return createReply(PLAY_MENU);
-			} else if (0 == requestBody.compareTo(PLAY_1_REQUEST)) {
-				return createReply(PLAY_1_REPLY);
-			} else if (0 == requestBody.compareTo(PLAY_2_REQUEST)) {
-				return createReply(PLAY_2_REPLY);
-			} else if (0 == requestBody.compareTo(PLAY_3_REQUEST)) {
-				return createReply(PLAY_3_REPLY);
-			} else if (0 == requestBody.compareTo(PLAY_4_REQUEST)) {
-				return createReply(PLAY_4_REPLY);
+			} else if (0 == requestBody.compareToIgnoreCase(PLAY_1_REQUEST)) {
+				return play(PLAY_1_NAME, PLAY_1_FILE, PLAY_1_REPLY);
+			} else if (0 == requestBody.compareToIgnoreCase(PLAY_2_REQUEST)) {
+				return play(PLAY_2_NAME, PLAY_2_FILE, PLAY_2_REPLY);
+			} else if (0 == requestBody.compareToIgnoreCase(PLAY_3_REQUEST)) {
+				return play(PLAY_3_NAME, PLAY_3_FILE, PLAY_3_REPLY);
+			} else if (0 == requestBody.compareToIgnoreCase(PLAY_4_REQUEST)) {
+				return play(PLAY_4_NAME, PLAY_4_FILE, PLAY_4_REPLY);
+			} else if (0 == requestBody.compareToIgnoreCase(PAUSE_REQUEST)) {
+				(new Thread() {
+					public void run() {
+					    vc.stop();
+					}
+				}).start();
+				return createReply(PAUSE_REPLY);
 			}
 
 			return createReply(PLAY_GEN_REPLY);
 		});
+	}
+	
+	public static String play(String name, String file, String reply) {
+		(new Thread() {
+			public void run() {
+			    vc.play(name, file);
+			}
+		}).start();
+		return createReply(reply);
 	}
 	
 	public static void sendMessage(String toPhone, String messageText) {
