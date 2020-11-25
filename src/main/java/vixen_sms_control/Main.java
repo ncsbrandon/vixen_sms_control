@@ -53,8 +53,7 @@ public class Main {
 		post("/sms", (req, res) -> {
 			res.type("application/xml");
 
-			// logger.info("request: " + req.body());
-			String requestBody = req.queryParamOrDefault("Body", "REQUEST_ERROR");
+			String requestBody = req.queryParamOrDefault("Body", "REQUEST_ERROR").trim();
 			logger.info("request body: " + requestBody);
 
 			if (0 == requestBody.compareToIgnoreCase(PLAY_REQUEST)) {
@@ -68,12 +67,7 @@ public class Main {
 			} else if (0 == requestBody.compareToIgnoreCase(PLAY_4_REQUEST)) {
 				return play(PLAY_4_NAME, PLAY_4_FILE, PLAY_4_REPLY);
 			} else if (0 == requestBody.compareToIgnoreCase(PAUSE_REQUEST)) {
-				(new Thread() {
-					public void run() {
-					    vc.stop();
-					}
-				}).start();
-				return createReply(PAUSE_REPLY);
+				return pause(PAUSE_REPLY);
 			}
 
 			return createReply(PLAY_GEN_REPLY);
@@ -89,7 +83,16 @@ public class Main {
 		return createReply(reply);
 	}
 	
-	public static void sendMessage(String toPhone, String messageText) {
+	public static String pause(String reply) {
+		(new Thread() {
+			public void run() {
+			    vc.stop();
+			}
+		}).start();
+		return createReply(reply);
+	}
+	
+ 	public static void sendMessage(String toPhone, String messageText) {
 		String sid = AppConfig.getInstance().get(AppConfig.CONFIG_ACCOUNT_SID);
 		String auth = AppConfig.getInstance().get(AppConfig.CONFIG_AUTH_TOKEN);
 		String fromPhone = AppConfig.getInstance().get(AppConfig.CONFIG_FROM_PHONE);
