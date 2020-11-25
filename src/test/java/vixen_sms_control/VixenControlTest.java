@@ -11,34 +11,24 @@ public class VixenControlTest {
 	@Test
 	public void testPlay() {
 		VixenControl poster = new VixenControl("http://192.168.14.2:8888/");
-
 		logger.info("testing");
 		
 		poster.status();
-		/*
+		
 		poster.play("wizards", "C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\wizards.tim");
 
-		poster.status();
-		
 		try {
 			Thread.sleep(5000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		} catch (InterruptedException e1) {}
 
 		poster.status();
 		
-		//poster.stop();
+		poster.stop();
 		
 		try {
 			Thread.sleep(5000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		} catch (InterruptedException e1) {}
 		
 		poster.status();
-		*/
 	}
 }

@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class VixenControl {
 
@@ -19,6 +20,8 @@ public class VixenControl {
 	private String url = "";
 	private String lastName = "";
 	private String lastFile = "";
+	private ObjectMapper om = new ObjectMapper();
+	private Root root;
 
 	public VixenControl(String url) {
 		this.url = url;
@@ -65,7 +68,8 @@ public class VixenControl {
 	private void post(String page, String requestBody) throws IOException, InterruptedException {
 		// build the request
 		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url + page))
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(URI.create(url + page))
 				.POST(HttpRequest.BodyPublishers.ofString(requestBody))
 				.header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
 				.header("Accept", "application/json, text/javascript, */*; q=0.01")
@@ -73,49 +77,55 @@ public class VixenControl {
 
 		// logging
 		logger.info("-> " + request.toString());
-		Map<String, List<String>> requestHeaders = request.headers().map();
-		for (Entry<String, List<String>> requestHeader : requestHeaders.entrySet()) {
-			logger.info("-> Header Name - " + requestHeader.getKey() + ", Value - " + requestHeader.getValue().toString());
-		}
-		logger.info("-> " + requestBody);
+		//Map<String, List<String>> requestHeaders = request.headers().map();
+		//for (Entry<String, List<String>> requestHeader : requestHeaders.entrySet()) {
+		//	logger.info("-> Header Name - " + requestHeader.getKey() + ", Value - " + requestHeader.getValue().toString());
+		//}
+		//logger.info("-> " + requestBody);
 
 		// send and receive
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
 		// logging
 		logger.info("<- " + response.toString());
-		Map<String, List<String>> responseHeaders = response.headers().map();
-		for (Entry<String, List<String>> responseHeader : responseHeaders.entrySet()) {
-			logger.info("<- Header Name - " + responseHeader.getKey() + ", Value - " + responseHeader.getValue().toString());
-		}
+		//Map<String, List<String>> responseHeaders = response.headers().map();
+		//for (Entry<String, List<String>> responseHeader : responseHeaders.entrySet()) {
+		//	logger.info("<- Header Name - " + responseHeader.getKey() + ", Value - " + responseHeader.getValue().toString());
+		//}
 		logger.info("<- " + response.body());
 	}
 	
 	private void get(String page) throws IOException, InterruptedException {
 		// build the request
 		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url + page))
-				.GET()
-				.header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
-				.header("Accept", "application/json, text/javascript, */*; q=0.01")
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(URI.create(url + page))
 				.build();
 
 		// logging
 		logger.info("-> " + request.toString());
-		Map<String, List<String>> requestHeaders = request.headers().map();
-		for (Entry<String, List<String>> requestHeader : requestHeaders.entrySet()) {
-			logger.info("-> Header Name - " + requestHeader.getKey() + ", Value - " + requestHeader.getValue().toString());
-		}
+		//Map<String, List<String>> requestHeaders = request.headers().map();
+		//for (Entry<String, List<String>> requestHeader : requestHeaders.entrySet()) {
+		//	logger.info("-> Header Name - " + requestHeader.getKey() + ", Value - " + requestHeader.getValue().toString());
+		//}
 
 		// send and receive
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
+		logger.info("<- " + response.body());
+		if(response.body().length() > 0) {
+			root = om.readValue(response.body(), Root.class);
+		} else {
+			root = new Root();
+		}
+		logger.info(root.toString());
+		
 		// logging
 		logger.info("<- " + response.toString());
-		Map<String, List<String>> responseHeaders = response.headers().map();
-		for (Entry<String, List<String>> responseHeader : responseHeaders.entrySet()) {
-			logger.info("<- Header Name - " + responseHeader.getKey() + ", Value - " + responseHeader.getValue().toString());
-		}
-		logger.info("<- " + response.body());
+		//Map<String, List<String>> responseHeaders = response.headers().map();
+		//for (Entry<String, List<String>> responseHeader : responseHeaders.entrySet()) {
+		//	logger.info("<- Header Name - " + responseHeader.getKey() + ", Value - " + responseHeader.getValue().toString());
+		//}
+		//logger.info("<- " + response.body());
 	}
 }
