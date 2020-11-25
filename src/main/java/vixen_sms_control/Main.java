@@ -78,7 +78,7 @@ public class Main {
 		
 		// run an idle check every minute
 		idleCheck = new Timer();
-		idleCheck.schedule(new IdleCheckTask(), 500, 60000);
+		idleCheck.schedule(new IdleCheckTask(vc), 4000, 60000);
 	}
 	
 	public static String play(String name, String file, String reply) {
