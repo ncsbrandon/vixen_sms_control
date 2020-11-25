@@ -87,12 +87,17 @@ public class VixenControl {
 				// strip the square brackets
 				response = response.substring(1, response.length()-1);
 				
-				// parse the json
-				active = om.readValue(response, Root.class);
-				logger.info("active song: " + active.toString());
+				if(response.length() > 0) {
+					// parse the json
+					active = om.readValue(response, Root.class);
+					logger.info("active song: " + active.toString());
+				}else {
+					active = null;
+					logger.info("no active song");
+				}
 			} else {
 				active = null;
-				logger.info("no active song");
+				logger.info("no response");
 			}
 		} catch (Exception e) {
 			active = null;
@@ -111,7 +116,7 @@ public class VixenControl {
 				.build();
 
 		// logging
-		logger.info("-> " + request.toString());
+		logger.debug("-> " + request.toString());
 		//Map<String, List<String>> requestHeaders = request.headers().map();
 		//for (Entry<String, List<String>> requestHeader : requestHeaders.entrySet()) {
 		//	logger.info("-> Header Name - " + requestHeader.getKey() + ", Value - " + requestHeader.getValue().toString());
@@ -122,12 +127,12 @@ public class VixenControl {
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
 		// logging
-		logger.info("<- " + response.toString());
+		logger.debug("<- " + response.toString());
 		//Map<String, List<String>> responseHeaders = response.headers().map();
 		//for (Entry<String, List<String>> responseHeader : responseHeaders.entrySet()) {
 		//	logger.info("<- Header Name - " + responseHeader.getKey() + ", Value - " + responseHeader.getValue().toString());
 		//}
-		logger.info("<- " + response.body());
+		logger.debug("<- " + response.body());
 	}
 	
 	private String get(String page) throws IOException, InterruptedException {
@@ -138,7 +143,7 @@ public class VixenControl {
 				.build();
 
 		// logging
-		logger.info("-> " + request.toString());
+		logger.debug("-> " + request.toString());
 		//Map<String, List<String>> requestHeaders = request.headers().map();
 		//for (Entry<String, List<String>> requestHeader : requestHeaders.entrySet()) {
 		//	logger.info("-> Header Name - " + requestHeader.getKey() + ", Value - " + requestHeader.getValue().toString());
@@ -148,12 +153,12 @@ public class VixenControl {
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
 		// logging
-		logger.info("<- " + response.toString());
+		logger.debug("<- " + response.toString());
 		//Map<String, List<String>> responseHeaders = response.headers().map();
 		//for (Entry<String, List<String>> responseHeader : responseHeaders.entrySet()) {
 		//	logger.info("<- Header Name - " + responseHeader.getKey() + ", Value - " + responseHeader.getValue().toString());
 		//}
-		logger.info("<- " + response.body());
+		logger.debug("<- " + response.body());
 		
 		return response.body();
 	}

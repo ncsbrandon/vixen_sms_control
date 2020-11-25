@@ -21,7 +21,9 @@ public class Main {
 	public static final String PLAY_MENU = "Tune your radio to 88.3 FM and then select a song:\n"
 										 + "1 - Wizards in Winter\n"
 										 + "2 - Red and White From State\n"
-										 + "3 - Christmas tree";
+										 + "3 - (silent) Christmas tree\n"
+										 + "4 - Resonance";
+	
 	public static final String PLAY_1_REQUEST = "1";
 	public static final String PLAY_1_REPLY = "Loading Wizards in Winter by Trans-Siberian Orchestra...";
 	public static final String PLAY_1_NAME = "wizards";
@@ -38,9 +40,14 @@ public class Main {
 	public static final String PLAY_3_FILE = "C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\tree.tim";
 	
 	public static final String PLAY_4_REQUEST = "4";
-	public static final String PLAY_4_REPLY = "Loading Test pattern...";
-	public static final String PLAY_4_NAME = "test";
-	public static final String PLAY_4_FILE = "C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\test.tim";
+	public static final String PLAY_4_REPLY = "Loading Resonance by Home...";
+	public static final String PLAY_4_NAME = "one";
+	public static final String PLAY_4_FILE = "C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\one.tim";
+	
+	public static final String PLAY_5_REQUEST = "5";
+	public static final String PLAY_5_REPLY = "Loading test pattern...";
+	public static final String PLAY_5_NAME = "test";
+	public static final String PLAY_5_FILE = "C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\test.tim";
 	
 	public static final String PAUSE_REQUEST = "pause";
 	public static final String PAUSE_REPLY = "Pausing...";
@@ -69,6 +76,8 @@ public class Main {
 				return play(PLAY_3_NAME, PLAY_3_FILE, PLAY_3_REPLY);
 			} else if (0 == requestBody.compareToIgnoreCase(PLAY_4_REQUEST)) {
 				return play(PLAY_4_NAME, PLAY_4_FILE, PLAY_4_REPLY);
+			} else if (0 == requestBody.compareToIgnoreCase(PLAY_5_REQUEST)) {
+				return play(PLAY_5_NAME, PLAY_5_FILE, PLAY_5_REPLY);
 			} else if (0 == requestBody.compareToIgnoreCase(PAUSE_REQUEST)) {
 				return pause(PAUSE_REPLY);
 			}
