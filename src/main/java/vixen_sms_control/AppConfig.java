@@ -30,7 +30,11 @@ public class AppConfig {
 		}
 	}
 	
-	public String get(String key) {
+	public String getString(String key) {
 		return prop.getProperty(key);
+	}
+	
+	public int getInt(String key) {
+		return Integer.valueOf(getString(key));
 	}
 }

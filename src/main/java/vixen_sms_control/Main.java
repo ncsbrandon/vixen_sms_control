@@ -21,7 +21,7 @@ public class Main {
 	public static final String PLAY_MENU = "Tune your radio to 88.3 FM and then select a song:\n"
 										 + "1 - Wizards in Winter\n"
 										 + "2 - Red and White From State\n"
-										 + "3 - (silent) Christmas tree\n"
+										 + "3 - Christmas tree (no music)\n"
 										 + "4 - Resonance";
 	
 	public static final String PLAY_1_REQUEST = "1";
@@ -45,7 +45,7 @@ public class Main {
 	public static final String PLAY_4_FILE = "C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\one.tim";
 	
 	public static final String PLAY_5_REQUEST = "5";
-	public static final String PLAY_5_REPLY = "Loading test pattern...";
+	public static final String PLAY_5_REPLY = "Loading a test pattern...";
 	public static final String PLAY_5_NAME = "test";
 	public static final String PLAY_5_FILE = "C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\test.tim";
 	
@@ -93,33 +93,31 @@ public class Main {
 	public static String play(String name, String file, String reply) {
 		(new Thread() {
 			public void run() {
-				try {
-					vc.play(name, file);
-				} catch (Exception e) {
-					logger.error("play error", e);
+				if(!vc.play(name, file)) {
+					logger.error("play error");
 				}
 			}
 		}).start();
+		
 		return createReply(reply);
 	}
 	
 	public static String pause(String reply) {
 		(new Thread() {
 			public void run() {
-				try {
-					vc.stopActive();
-				} catch (Exception e) {
-					logger.error("pause error", e);
+				if(!vc.stopActive()) {
+					logger.error("pause error");
 				}
 			}
 		}).start();
+		
 		return createReply(reply);
 	}
 	
  	public static void sendMessage(String toPhone, String messageText) {
-		String sid = AppConfig.getInstance().get(AppConfig.CONFIG_ACCOUNT_SID);
-		String auth = AppConfig.getInstance().get(AppConfig.CONFIG_AUTH_TOKEN);
-		String fromPhone = AppConfig.getInstance().get(AppConfig.CONFIG_FROM_PHONE);
+		String sid = AppConfig.getInstance().getString(AppConfig.CONFIG_ACCOUNT_SID);
+		String auth = AppConfig.getInstance().getString(AppConfig.CONFIG_AUTH_TOKEN);
+		String fromPhone = AppConfig.getInstance().getString(AppConfig.CONFIG_FROM_PHONE);
 		
 		Twilio.init(sid, auth);
 

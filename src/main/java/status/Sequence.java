@@ -1,4 +1,4 @@
-package vixen_sms_control;
+package status;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

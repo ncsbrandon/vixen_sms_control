@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import status.Root;
+
 public class VixenControl {
 
 	private static Logger logger = LoggerFactory.getLogger(VixenControl.class.getSimpleName());
@@ -91,7 +93,7 @@ public class VixenControl {
 		try {
 			response = get("api/play/status");
 		} catch (IOException | InterruptedException e) {
-			logger.error("stop failure", e);
+			logger.error("status failure", e);
 			response = "";
 		}
 		

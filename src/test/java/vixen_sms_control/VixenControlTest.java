@@ -22,6 +22,9 @@ public class VixenControlTest {
 		poster.stopActive();
 		safeSleep(5000);
 		
+		poster.stopActive();
+		safeSleep(5000);
+		
 		poster.status();
 	}
 	
