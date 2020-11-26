@@ -13,22 +13,21 @@ public class VixenControlTest {
 		VixenControl poster = new VixenControl("http://192.168.14.2:8888/");
 		logger.info("testing");
 		
-		poster.status();
-		
 		poster.play("wizards", "C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\wizards.tim");
+		safeSleep(5000);
 
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e1) {}
-
-		poster.status();
+		poster.play("tree", "C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\tree.tim");
+		safeSleep(5000);
 		
 		poster.stopActive();
-		
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e1) {}
+		safeSleep(5000);
 		
 		poster.status();
+	}
+	
+	void safeSleep(long ms) {
+		try {
+			Thread.sleep(ms);
+		} catch (InterruptedException e1) {}
 	}
 }

@@ -30,7 +30,14 @@ public class VixenControl {
 		return false;
 	}
 	
-	public void play(String name, String file) {
+	public String getActive() {
+		if(active != null && active.sequence != null && active.sequence.name.length() > 0)
+			return active.sequence.name;
+		
+		return "";
+	}
+	
+	public boolean play(String name, String file) {
 		// if there's a currently active song, stop it first
 		stopActive();
 			
@@ -42,38 +49,44 @@ public class VixenControl {
 
 		// post
 		try {
+			logger.info("requesting: " + name);
 			post("api/play/playSequence", requestBody.toString());
 		} catch (IOException | InterruptedException e) {
 			logger.error("play failure", e);
+			return false;
 		}
+		
+		return true;
 	}
 	
-	public void stopActive() {
+	public boolean stopActive() {
 		// if there's a currently active song, stop it first
 		status();
 		if(isActive()) {
-			stop(active.sequence.name, active.sequence.fileName);
-			
-			try {
-				Thread.sleep(3000);
-			} catch (InterruptedException e1) {}
+			return stop(active.sequence.name, active.sequence.fileName);
 		}
+		
+		return true;
 	}
 	
-	private void stop(String name, String filename) {
+	private boolean stop(String name, String filename) {
 		StringBuilder requestBody = new StringBuilder();
 		requestBody.append("Name=" + name);
 		requestBody.append("&");
 		requestBody.append("FileName=" + filename);
 		
 		try {
+			logger.info("stopping: " + name);
 			post("api/play/stopSequence", requestBody.toString());
 		} catch (IOException | InterruptedException e) {
 			logger.error("stop failure", e);
+			return false;
 		}
+		
+		return true;
 	}
 	
-	public void status() {
+	public boolean status() {
 		String response;
 		try {
 			response = get("api/play/status");
@@ -98,11 +111,15 @@ public class VixenControl {
 			} else {
 				active = null;
 				logger.info("no response");
+				return false;
 			}
 		} catch (Exception e) {
 			active = null;
 			logger.error("status response parse failure", e);
+			return false;
 		}
+		
+		return true;
 	}
 
 	private void post(String page, String requestBody) throws IOException, InterruptedException {
