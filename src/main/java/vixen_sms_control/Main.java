@@ -58,7 +58,7 @@ public class Main {
 	private static Timer idleCheck;
 	
 	public static void main(String[] args) {
-		get("/", (req, res) -> "Hello Web");
+		get("/", (req, res) -> "404");
 
 		post("/sms", (req, res) -> {
 			res.type("application/xml");
