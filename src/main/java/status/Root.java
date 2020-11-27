@@ -12,14 +12,14 @@ public class Root {
 	@JsonProperty("Position")
 	public String position;
 	@JsonProperty("Message")
-	public String message;
+	public Object message;
 	@JsonProperty("Details")
 	public List<Object> details;
 	@JsonProperty("IsSuccessful")
 	public boolean isSuccessful;
-	
+
 	@Override
 	public String toString() {
-		return String.format("[%s]", sequence.name);
+		return String.format("[%d][%s]", state, sequence.name);
 	}
 }

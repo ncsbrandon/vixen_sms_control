@@ -13,18 +13,22 @@ public class VixenControlTest {
 		VixenControl poster = new VixenControl("http://192.168.14.2:8888/");
 		logger.info("testing");
 		
-		poster.play("wizards", "C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\wizards.tim");
+		// stop nothing		
+		poster.stopActive();
+		
+		// play test
+		poster.play("test", "C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\test.tim");
 		safeSleep(5000);
 
+		// interrupt test with tree
 		poster.play("tree", "C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\tree.tim");
 		safeSleep(5000);
 		
+		// stop tree
 		poster.stopActive();
 		safeSleep(5000);
 		
-		poster.stopActive();
-		safeSleep(5000);
-		
+		// nothing playing
 		poster.status();
 	}
 	
