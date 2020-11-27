@@ -10,7 +10,7 @@ public class IdleCheckTask extends TimerTask {
 
 	private static Logger logger = LoggerFactory.getLogger(IdleCheckTask.class.getSimpleName());
 
-	public static final int START_HOUR = 17;
+	public static final int START_HOUR = 5;//17;
 	public static final int STOP_HOUR = 23;
 
 	private VixenControl vc = null;

@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.twiml.MessagingResponse;
 import com.twilio.twiml.messaging.Body;
 import com.twilio.type.PhoneNumber;
@@ -22,7 +23,9 @@ public class Main {
 										 + "1 - Wizards in Winter\n"
 										 + "2 - Red and White From State\n"
 										 + "3 - Christmas tree (no music)\n"
-										 + "4 - Resonance";
+										 + "4 - Resonance\n"
+										 + "\n"
+										 + "and more coming soon!";
 	
 	public static final String PLAY_1_REQUEST = "1";
 	public static final String PLAY_1_REPLY = "Loading Wizards in Winter by Trans-Siberian Orchestra...";
@@ -58,6 +61,8 @@ public class Main {
 	private static Timer idleCheck;
 	
 	public static void main(String[] args) {
+		logger.info("starting app");
+		
 		get("/", (req, res) -> "404");
 
 		post("/sms", (req, res) -> {
@@ -87,7 +92,7 @@ public class Main {
 		
 		// run an idle check every minute
 		idleCheck = new Timer();
-		idleCheck.schedule(new IdleCheckTask(vc), 4000, 60000);
+		idleCheck.schedule(new IdleCheckTask(vc), 1000, 60000);
 	}
 	
 	public static String play(String name, String file, String reply) {
@@ -121,13 +126,11 @@ public class Main {
 		
 		Twilio.init(sid, auth);
 
-		com.twilio.rest.api.v2010.account.Message message = com.twilio.rest.api.v2010.account.Message
-				.creator(new PhoneNumber(toPhone),
-						new PhoneNumber(fromPhone),
-						messageText)
+		Message message = Message
+				.creator(new PhoneNumber(toPhone), new PhoneNumber(fromPhone), messageText)
 				.create();
 
-		System.out.println(message.getSid());
+		logger.info(message.getSid());
 	}
 
 	public static String createReply(String contents) {
