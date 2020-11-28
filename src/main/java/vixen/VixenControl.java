@@ -19,7 +19,7 @@ public class VixenControl {
 
 	private String url = "";
 	private ObjectMapper om = new ObjectMapper();
-	private Root[] active;
+	private Root[] active = null;
 	
 	public VixenControl(String url) {
 		this.url = url;
@@ -58,10 +58,8 @@ public class VixenControl {
 		// if there's a currently active song, stop it first
 		status();
 		if(isActive()) {
-			if(active != null) {
-				for(Root song : active) {
-					stop(song.sequence.name, song.sequence.fileName);
-				}
+			for(Root song : active) {
+				stop(song.sequence.name, song.sequence.fileName);
 			}
 		}
 		

@@ -62,6 +62,7 @@ public class Main {
 				return pause(ac.getString(AppConfig.PAUSE_REPLY));
 			}
 
+			// not sure what they've requested
 			return createReply(ac.getString(AppConfig.PLAY_GEN_REPLY));
 		});
 		
@@ -70,13 +71,25 @@ public class Main {
 		idleCheck.schedule(new IdleCheckTask(vc), 1000, ac.getLong(AppConfig.IDLE_CHECK_MS));
 	}
 	
+	public static String createReply(String contents) {
+		Body body = new Body.Builder(contents)
+				.build();
+		com.twilio.twiml.messaging.Message sms = new com.twilio.twiml.messaging.Message.Builder()
+				.body(body)
+				.build();
+		MessagingResponse twiml = new MessagingResponse.Builder()
+				.message(sms)
+				.build();
+		return twiml.toXml();
+	}
+	
 	public static String play(String name, String file, String reply) {
 		(new Thread() {
 			public void run() {
 				if(!vc.play(name, file)) {
 					logger.error("play error");
 				} else {
-					sendMessage(AppConfig.getInstance().getString(AppConfig.MY_PHONE), "playing " + name);
+					sendMessage(AppConfig.getInstance().getString(AppConfig.MY_PHONE), "Playing " + name);
 				}
 			}
 		}).start();
@@ -107,13 +120,8 @@ public class Main {
 				.creator(new PhoneNumber(toPhone), new PhoneNumber(fromPhone), messageText)
 				.create();
 
-		logger.info(message.getSid());
+		logger.debug(message.getSid());
 	}
 
-	public static String createReply(String contents) {
-		Body body = new Body.Builder(contents).build();
-		com.twilio.twiml.messaging.Message sms = new com.twilio.twiml.messaging.Message.Builder().body(body).build();
-		MessagingResponse twiml = new MessagingResponse.Builder().message(sms).build();
-		return twiml.toXml();
-	}
+	
 }
