@@ -1,4 +1,4 @@
-package vixen_sms_control;
+package vixen;
 
 import org.junit.Test;
 import org.slf4j.Logger;

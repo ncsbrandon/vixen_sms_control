@@ -1,4 +1,4 @@
-package vixen_sms_control;
+package vixen;
 
 import java.io.IOException;
 import java.net.URI;

@@ -1,4 +1,4 @@
-package vixen_sms_control;
+package app;
 
 import static spark.Spark.get;
 import static spark.Spark.post;
@@ -14,6 +14,10 @@ import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.twiml.MessagingResponse;
 import com.twilio.twiml.messaging.Body;
 import com.twilio.type.PhoneNumber;
+
+import config.AppConfig;
+import vixen.IdleCheckTask;
+import vixen.VixenControl;
 
 public class Main {
 
