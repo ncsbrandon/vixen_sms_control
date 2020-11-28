@@ -5,11 +5,48 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class AppConfig {
 
-	public static final String CONFIG_ACCOUNT_SID = "ACCOUNT_SID";
-	public static final String CONFIG_AUTH_TOKEN = "AUTH_TOKEN";
-	public static final String CONFIG_FROM_PHONE = "FROM_PHONE";
+	private static Logger logger = LoggerFactory.getLogger(AppConfig.class.getSimpleName());
+
+	public static final String ACCOUNT_SID = "ACCOUNT_SID";
+	public static final String AUTH_TOKEN = "AUTH_TOKEN";
+	public static final String FROM_PHONE = "FROM_PHONE";
+	public static final String VIXEN_URL = "VIXEN_URL";
+	public static final String PLAY_REQUEST = "PLAY_REQUEST";
+	public static final String PLAY_MENU = "PLAY_MENU";
+	public static final String PLAY_1_REQUEST = "PLAY_1_REQUEST";
+	public static final String PLAY_1_REPLY = "PLAY_1_REPLY";
+	public static final String PLAY_1_NAME = "PLAY_1_NAME";
+	public static final String PLAY_1_FILE = "PLAY_1_FILE";
+	public static final String PLAY_2_REQUEST = "PLAY_2_REQUEST";
+	public static final String PLAY_2_REPLY = "PLAY_2_REPLY";
+	public static final String PLAY_2_NAME = "PLAY_2_NAME";
+	public static final String PLAY_2_FILE = "PLAY_2_FILE";	
+	public static final String PLAY_3_REQUEST = "PLAY_3_REQUEST";
+	public static final String PLAY_3_REPLY = "PLAY_3_REPLY";
+	public static final String PLAY_3_NAME = "PLAY_3_NAME";
+	public static final String PLAY_3_FILE = "PLAY_3_FILE";
+	public static final String PLAY_4_REQUEST = "PLAY_4_REQUEST";
+	public static final String PLAY_4_REPLY = "PLAY_4_REPLY";
+	public static final String PLAY_4_NAME = "PLAY_4_NAME";
+	public static final String PLAY_4_FILE = "PLAY_4_FILE";	
+	public static final String PLAY_5_REQUEST = "PLAY_5_REQUEST";
+	public static final String PLAY_5_REPLY = "PLAY_5_REPLY";
+	public static final String PLAY_5_NAME = "PLAY_5_NAME";
+	public static final String PLAY_5_FILE = "PLAY_5_FILE";
+	public static final String PAUSE_REQUEST = "PAUSE_REQUEST";
+	public static final String PAUSE_REPLY = "PAUSE_REPLY";
+	public static final String PLAY_GEN_REPLY = "PLAY_GEN_REPLY";
+	public static final String MY_PHONE = "MY_PHONE";
+	public static final String IDLE_CHECK_MS = "IDLE_CHECK_MS";
+	public static final String IDLE_CHECK_START_HOUR = "IDLE_CHECK_START_HOUR";
+	public static final String IDLE_CHECK_STOP_HOUR = "IDLE_CHECK_STOP_HOUR";
+	public static final String PLAY_IDLE_NAME = "PLAY_IDLE_NAME";
+	public static final String PLAY_IDLE_FILE = "PLAY_IDLE_FILE";
 	
 	private static final String PROP_FILENAME = "config.properties";
 	private Properties prop = new Properties();
@@ -31,10 +68,17 @@ public class AppConfig {
 	}
 	
 	public String getString(String key) {
-		return prop.getProperty(key);
+		String val = prop.getProperty(key);
+		if(val == null)
+			logger.error("key ["+key+"] not found");
+		return val;
 	}
 	
 	public int getInt(String key) {
 		return Integer.valueOf(getString(key));
+	}
+	
+	public long getLong(String key) {
+		return Long.valueOf(getString(key));
 	}
 }

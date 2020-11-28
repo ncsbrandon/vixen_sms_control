@@ -1,0 +1,50 @@
+ACCOUNT_SID=[TWILIO SID]
+AUTH_TOKEN=[TWILIO TOKEN]
+FROM_PHONE=[TWILIO PHONE]
+MY_PHONE=[YOUR PHONE]
+VIXEN_URL=http://192.168.14.2:8888/
+
+IDLE_CHECK_MS=60000
+IDLE_CHECK_START_HOUR=12
+IDLE_CHECK_STOP_HOUR=23
+PLAY_IDLE_NAME=tree
+PLAY_IDLE_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\tree.tim
+
+PLAY_REQUEST=play
+PLAY_MENU=Tune your radio to 88.3 FM and then select a song:\n\
+1 - Wizards in Winter\n\
+2 - Red and White From State\n\
+3 - Resonance\n\
+4 - Christmas tree (no music)\n\
+\n\
+and more coming soon!!
+
+PLAY_1_REQUEST=1
+PLAY_1_REPLY=Loading Wizards in Winter by Trans-Siberian Orchestra...
+PLAY_1_NAME=wizards
+PLAY_1_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\wizards.tim
+	
+PLAY_2_REQUEST=2
+PLAY_2_REPLY=Loading Red and White From State by NC State Marching Band...
+PLAY_2_NAME=red_and_white
+PLAY_2_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\red_and_white.tim
+	
+PLAY_4_REQUEST=4
+PLAY_4_REPLY=Loading Christmas tree...
+PLAY_4_NAME=tree
+PLAY_4_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\tree.tim
+	
+PLAY_3_REQUEST=3
+PLAY_3_REPLY=Loading Resonance by Home...
+PLAY_3_NAME=one
+PLAY_3_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\one.tim
+	
+PLAY_5_REQUEST=5
+PLAY_5_REPLY=Loading a test pattern...
+PLAY_5_NAME=test
+PLAY_5_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\test.tim
+
+PAUSE_REQUEST=pause
+PAUSE_REPLY=Pausing...
+	
+PLAY_GEN_REPLY=Merry Christmas from the ***** family!
