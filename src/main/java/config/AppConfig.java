@@ -38,6 +38,10 @@ public class AppConfig {
 	public static final String PLAY_5_REPLY = "PLAY_5_REPLY";
 	public static final String PLAY_5_NAME = "PLAY_5_NAME";
 	public static final String PLAY_5_FILE = "PLAY_5_FILE";
+	public static final String PLAY_6_REQUEST = "PLAY_6_REQUEST";
+	public static final String PLAY_6_REPLY = "PLAY_6_REPLY";
+	public static final String PLAY_6_NAME = "PLAY_6_NAME";
+	public static final String PLAY_6_FILE = "PLAY_6_FILE";
 	public static final String PAUSE_REQUEST = "PAUSE_REQUEST";
 	public static final String PAUSE_REPLY = "PAUSE_REPLY";
 	public static final String PLAY_GEN_REPLY = "PLAY_GEN_REPLY";
