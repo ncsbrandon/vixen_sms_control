@@ -1,8 +1,0 @@
-# only needed once to create the profile
-#twilio login
-
-# setup the profile
-twilio profiles:use christmas
-
-# forward requests
-twilio phone-numbers:update "+12569523125" --sms-url="http://localhost:4567/sms"
