@@ -19,6 +19,8 @@ PLAY_MENU=Tune your radio to 88.3 FM and then select a song:\n\
 \n\
 and more coming soon!!
 
+OFF_HOURS=I'm not online right now, come back later
+
 PLAY_1_REQUEST=1
 PLAY_1_REPLY=Loading Wizards in Winter by Trans-Siberian Orchestra...
 PLAY_1_NAME=wizards

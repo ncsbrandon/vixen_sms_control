@@ -4,6 +4,7 @@ import static spark.Spark.get;
 import static spark.Spark.post;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Timer;
 
 import org.slf4j.Logger;
@@ -27,12 +28,14 @@ public class Main {
 	private static Timer idleCheck;
 	
 	public static void main(String[] args) {
-		logger.info("starting app");
+		logger.info("starting application");
+		
 		AppConfig ac = AppConfig.getInstance();
 		try {
 			ac.load();
+			logger.info("config loaded");
 		} catch (IOException e) {
-			logger.error("config loading error");
+			logger.error("config loading error: " + e.getMessage());
 			return;
 		}
 		
@@ -42,6 +45,9 @@ public class Main {
 
 		post("/sms", (req, res) -> {
 			res.type("application/xml");
+			
+			if(timeCheck(ac))
+				return createReply(ac.getString(AppConfig.OFF_HOURS));
 
 			String requestBody = req.queryParamOrDefault("Body", "REQUEST_ERROR").trim();
 			logger.info("request body: " + requestBody);
@@ -60,6 +66,14 @@ public class Main {
 				return play(ac.getString(AppConfig.PLAY_5_NAME), ac.getString(AppConfig.PLAY_5_FILE), ac.getString(AppConfig.PLAY_5_REPLY));
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_6_REQUEST))) {
 				return play(ac.getString(AppConfig.PLAY_6_NAME), ac.getString(AppConfig.PLAY_6_FILE), ac.getString(AppConfig.PLAY_6_REPLY));
+			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_7_REQUEST))) {
+				return play(ac.getString(AppConfig.PLAY_7_NAME), ac.getString(AppConfig.PLAY_7_FILE), ac.getString(AppConfig.PLAY_7_REPLY));
+			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_8_REQUEST))) {
+				return play(ac.getString(AppConfig.PLAY_8_NAME), ac.getString(AppConfig.PLAY_8_FILE), ac.getString(AppConfig.PLAY_8_REPLY));
+			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_9_REQUEST))) {
+				return play(ac.getString(AppConfig.PLAY_9_NAME), ac.getString(AppConfig.PLAY_9_FILE), ac.getString(AppConfig.PLAY_9_REPLY));
+			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_10_REQUEST))) {
+				return play(ac.getString(AppConfig.PLAY_10_NAME), ac.getString(AppConfig.PLAY_10_FILE), ac.getString(AppConfig.PLAY_10_REPLY));
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PAUSE_REQUEST))) {
 				return pause(ac.getString(AppConfig.PAUSE_REPLY));
 			}
@@ -71,6 +85,15 @@ public class Main {
 		// run an idle check every minute
 		idleCheck = new Timer();
 		idleCheck.schedule(new IdleCheckTask(vc), 1000, ac.getLong(AppConfig.IDLE_CHECK_MS));
+	}
+	
+	public static boolean timeCheck(AppConfig ac) {
+		Calendar now = Calendar.getInstance();
+		if (now.get(Calendar.HOUR_OF_DAY) < ac.getInt(AppConfig.IDLE_CHECK_START_HOUR) ||
+			now.get(Calendar.HOUR_OF_DAY) > ac.getInt(AppConfig.IDLE_CHECK_STOP_HOUR))
+			return true;
+		
+		return false;
 	}
 	
 	public static String createReply(String contents) {
@@ -124,6 +147,4 @@ public class Main {
 
 		logger.debug(message.getSid());
 	}
-
-	
 }
