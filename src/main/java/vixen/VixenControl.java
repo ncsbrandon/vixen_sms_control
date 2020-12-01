@@ -25,14 +25,14 @@ public class VixenControl {
 		this.url = url;
 	}
 
-	public boolean isActive() {
+	public synchronized boolean isActive() {
 		if(active != null && active.length > 0)
 			return true;
 		
 		return false;
 	}
 	
-	public boolean play(String name, String file) {
+	public synchronized boolean play(String name, String file) {
 		// if there's a currently active song, stop it first
 		stopActive();
 			
@@ -54,7 +54,7 @@ public class VixenControl {
 		return true;
 	}
 	
-	public boolean stopActive() {
+	public synchronized boolean stopActive() {
 		// if there's a currently active song, stop it first
 		status();
 		if(isActive()) {
@@ -83,7 +83,7 @@ public class VixenControl {
 		return true;
 	}
 	
-	public boolean status() {
+	public synchronized boolean status() {
 		String response;
 		try {
 			response = get("api/play/status");
