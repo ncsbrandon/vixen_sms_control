@@ -1,6 +1,7 @@
 package vixen;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -34,7 +35,8 @@ public class VixenControl {
 	
 	public boolean play(String name, String file) {
 		// if there's a currently active song, stop it first
-		stopActive();
+		if(!stopActive())
+			return false;
 			
 		// build the request body
 		StringBuilder requestBody = new StringBuilder();
@@ -56,7 +58,13 @@ public class VixenControl {
 	
 	public boolean stopActive() {
 		// if there's a currently active song, stop it first
-		status();
+		try {
+			status();
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return false;
+		}
+		
 		if(isActive()) {
 			for(Root song : active) {
 				stop(song.sequence.name, song.sequence.fileName);
@@ -83,17 +91,19 @@ public class VixenControl {
 		return true;
 	}
 	
-	public boolean status() {
-		String response;
+	public boolean status() throws Exception {
+		String response = null;
 		try {
 			response = get("api/play/status");
+		} catch (ConnectException ce) {
+			throw new Exception("connection failure");		
 		} catch (IOException | InterruptedException e) {
 			logger.error("status failure", e);
 			response = "";
 		}
 		
 		try {
-			if(response.length() > 0) {
+			if(response != null && response.length() > 0) {
 				// parse the json
 				active = om.readValue(response, Root[].class);
 				logger.info("["+active.length+"] active songs");

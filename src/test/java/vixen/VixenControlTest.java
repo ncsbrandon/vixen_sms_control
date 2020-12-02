@@ -29,7 +29,12 @@ public class VixenControlTest {
 		safeSleep(5000);
 		
 		// nothing playing
-		poster.status();
+		try {
+			poster.status();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	void safeSleep(long ms) {
