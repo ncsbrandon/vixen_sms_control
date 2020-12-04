@@ -17,6 +17,7 @@ import com.twilio.twiml.messaging.Body;
 import com.twilio.type.PhoneNumber;
 
 import config.AppConfig;
+import process.VixenProcess;
 import vixen.IdleCheckTask;
 import vixen.VixenControl;
 
@@ -25,6 +26,7 @@ public class Main {
 	private static Logger logger = LoggerFactory.getLogger(Main.class.getSimpleName());
 
 	private static VixenControl vc;
+	private static VixenProcess vp;
 	private static Timer idleCheck;
 	
 	public static void main(String[] args) {
@@ -40,6 +42,7 @@ public class Main {
 		}
 		
 		vc = new VixenControl(ac.getString(AppConfig.VIXEN_URL));
+		vp = new VixenProcess();
 		
 		get("/", (req, res) -> "404");
 
@@ -84,7 +87,7 @@ public class Main {
 		
 		// run an idle check every minute
 		idleCheck = new Timer();
-		idleCheck.schedule(new IdleCheckTask(vc), 1000, ac.getLong(AppConfig.IDLE_CHECK_MS));
+		idleCheck.schedule(new IdleCheckTask(vc, vp), 1000, ac.getLong(AppConfig.IDLE_CHECK_MS));
 	}
 	
 	public static boolean timeCheck(AppConfig ac) {
