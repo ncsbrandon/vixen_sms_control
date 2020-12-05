@@ -1,10 +1,10 @@
 ACCOUNT_SID=[TWILIO SID]
 AUTH_TOKEN=[TWILIO TOKEN]
 FROM_PHONE=[TWILIO PHONE]
-MY_PHONE=[YOUR PHONE]
-VIXEN_URL=http://192.168.14.2:8888/
+MY_PHONE=[MY PHONE]
+VIXEN_URL=http://localhost:8888/
 
-IDLE_CHECK_MS=60000
+IDLE_CHECK_MS=30000
 IDLE_CHECK_START_HOUR=12
 IDLE_CHECK_STOP_HOUR=23
 PLAY_IDLE_NAME=tree
@@ -16,10 +16,12 @@ PLAY_MENU=Tune your radio to 88.3 FM and then select a song:\n\
 2 - Red and White From State\n\
 3 - Resonance\n\
 4 - Christmas tree (no music)\n\
+5 - Mullett Man\n\
+6 - We Wish You a Merry Christmas (by Hannah)\n\
 \n\
 and more coming soon!!
 
-OFF_HOURS=I'm not online right now, come back later
+OFF_HOURS=I'm turned off right now, come back later
 
 PLAY_1_REQUEST=1
 PLAY_1_REPLY=Loading Wizards in Winter by Trans-Siberian Orchestra...
@@ -31,22 +33,32 @@ PLAY_2_REPLY=Loading Red and White From State by NC State Marching Band...
 PLAY_2_NAME=red_and_white
 PLAY_2_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\red_and_white.tim
 	
-PLAY_4_REQUEST=4
-PLAY_4_REPLY=Loading Christmas tree...
-PLAY_4_NAME=tree
-PLAY_4_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\tree.tim
-	
 PLAY_3_REQUEST=3
 PLAY_3_REPLY=Loading Resonance by Home...
 PLAY_3_NAME=one
 PLAY_3_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\one.tim
-	
+
+PLAY_4_REQUEST=4
+PLAY_4_REPLY=Loading Christmas tree...
+PLAY_4_NAME=tree
+PLAY_4_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\tree.tim
+
 PLAY_5_REQUEST=5
-PLAY_5_REPLY=Loading a test pattern...
-PLAY_5_NAME=test
-PLAY_5_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\test.tim
+PLAY_5_REPLY=Loading a Matt Cornelius...
+PLAY_5_NAME=matt
+PLAY_5_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\matt.tim
+	
+PLAY_6_REQUEST=6
+PLAY_6_REPLY=Loading we wish you a merry christmas...
+PLAY_6_NAME=wwyamc
+PLAY_6_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\wwyamc.tim
+
+PLAY_6_REQUEST=7
+PLAY_6_REPLY=Loading a test pattern...
+PLAY_6_NAME=test
+PLAY_6_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\test.tim
 
 PAUSE_REQUEST=pause
 PAUSE_REPLY=Pausing...
 	
-PLAY_GEN_REPLY=Merry Christmas from the ***** family!
+PLAY_GEN_REPLY=Merry Christmas from the Whitaker family!
