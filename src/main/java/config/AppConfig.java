@@ -90,8 +90,11 @@ public class AppConfig {
 	
 	public String getString(String key) {
 		String val = prop.getProperty(key);
-		if(val == null)
+		if(val == null) {
 			logger.error("key ["+key+"] not found");
+			return "";
+		}
+		
 		return val;
 	}
 	
