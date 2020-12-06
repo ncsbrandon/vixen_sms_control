@@ -21,6 +21,7 @@ public class VixenControl {
 	private String url = "";
 	private ObjectMapper om = new ObjectMapper();
 	private Root[] active = null;
+	private HttpClient client = HttpClient.newHttpClient();
 	
 	public VixenControl(String url) {
 		this.url = url;
@@ -122,7 +123,6 @@ public class VixenControl {
 
 	private void post(String page, String requestBody) throws IOException, InterruptedException {
 		// build the request
-		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create(url + page))
 				.POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -152,7 +152,6 @@ public class VixenControl {
 	
 	private String get(String page) throws IOException, InterruptedException {
 		// build the request
-		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create(url + page))
 				.build();
