@@ -15,30 +15,35 @@ public class VixenProcess {
 	
 	private Process p = null;
 	
-	public VixenProcess() {
-	}
+	public VixenProcess() {	}
 	
 	public boolean isRunning() {
+		// is alive
 		if(p != null && p.isAlive())
 			return true;
 		
+		// is dead or unknown
 		return false;
 	}
 	
 	public void start() {
+		// already running
 		if(isRunning())
 			return;
 		
+		// start the application
 		try {
 			ProcessBuilder pb = new ProcessBuilder(VIXEN);
 			pb.directory(new File(DIR));
 			p = pb.start();
 			logger.info("vixen started");
 		} catch (IOException e) {
-			logger.error("start vixen failed");
+			logger.error("start vixen failed: " + e.getMessage());
 			p = null;
+			return;
 		}
 		
+		// wait for it to start
 		try {
 			Thread.sleep(10000);
 		} catch (InterruptedException e) {
@@ -47,9 +52,11 @@ public class VixenProcess {
 	}
 	
 	public void stop() {
+		// already stopped
 		if(!isRunning())
 			return;
 		
+		// request graceful stop
 		p.destroy();
 		logger.info("vixen stopped");
 		

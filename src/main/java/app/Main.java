@@ -27,7 +27,7 @@ public class Main {
 
 	private static VixenControl vc;
 	private static VixenProcess vp;
-	private static Timer idleCheck;
+	private static Timer idleCheck = null;
 	
 	public static void main(String[] args) {
 		logger.info("starting application");
@@ -58,38 +58,49 @@ public class Main {
 			if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_REQUEST))) {
 				return createReply(ac.getString(AppConfig.PLAY_MENU));
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_1_REQUEST))) {
-				return play(ac.getString(AppConfig.PLAY_1_NAME), ac.getString(AppConfig.PLAY_1_FILE), ac.getString(AppConfig.PLAY_1_REPLY));
+				return play(ac.getString(AppConfig.PLAY_1_NAME), ac.getString(AppConfig.PLAY_1_FILE), ac.getString(AppConfig.PLAY_1_REPLY), ac);
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_2_REQUEST))) {
-				return play(ac.getString(AppConfig.PLAY_2_NAME), ac.getString(AppConfig.PLAY_2_FILE), ac.getString(AppConfig.PLAY_2_REPLY));
+				return play(ac.getString(AppConfig.PLAY_2_NAME), ac.getString(AppConfig.PLAY_2_FILE), ac.getString(AppConfig.PLAY_2_REPLY), ac);
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_3_REQUEST))) {
-				return play(ac.getString(AppConfig.PLAY_3_NAME), ac.getString(AppConfig.PLAY_3_FILE), ac.getString(AppConfig.PLAY_3_REPLY));
+				return play(ac.getString(AppConfig.PLAY_3_NAME), ac.getString(AppConfig.PLAY_3_FILE), ac.getString(AppConfig.PLAY_3_REPLY), ac);
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_4_REQUEST))) {
-				return play(ac.getString(AppConfig.PLAY_4_NAME), ac.getString(AppConfig.PLAY_4_FILE), ac.getString(AppConfig.PLAY_4_REPLY));
+				return play(ac.getString(AppConfig.PLAY_4_NAME), ac.getString(AppConfig.PLAY_4_FILE), ac.getString(AppConfig.PLAY_4_REPLY), ac);
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_5_REQUEST))) {
-				return play(ac.getString(AppConfig.PLAY_5_NAME), ac.getString(AppConfig.PLAY_5_FILE), ac.getString(AppConfig.PLAY_5_REPLY));
+				return play(ac.getString(AppConfig.PLAY_5_NAME), ac.getString(AppConfig.PLAY_5_FILE), ac.getString(AppConfig.PLAY_5_REPLY), ac);
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_6_REQUEST))) {
-				return play(ac.getString(AppConfig.PLAY_6_NAME), ac.getString(AppConfig.PLAY_6_FILE), ac.getString(AppConfig.PLAY_6_REPLY));
+				return play(ac.getString(AppConfig.PLAY_6_NAME), ac.getString(AppConfig.PLAY_6_FILE), ac.getString(AppConfig.PLAY_6_REPLY), ac);
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_7_REQUEST))) {
-				return play(ac.getString(AppConfig.PLAY_7_NAME), ac.getString(AppConfig.PLAY_7_FILE), ac.getString(AppConfig.PLAY_7_REPLY));
+				return play(ac.getString(AppConfig.PLAY_7_NAME), ac.getString(AppConfig.PLAY_7_FILE), ac.getString(AppConfig.PLAY_7_REPLY), ac);
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_8_REQUEST))) {
-				return play(ac.getString(AppConfig.PLAY_8_NAME), ac.getString(AppConfig.PLAY_8_FILE), ac.getString(AppConfig.PLAY_8_REPLY));
+				return play(ac.getString(AppConfig.PLAY_8_NAME), ac.getString(AppConfig.PLAY_8_FILE), ac.getString(AppConfig.PLAY_8_REPLY), ac);
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_9_REQUEST))) {
-				return play(ac.getString(AppConfig.PLAY_9_NAME), ac.getString(AppConfig.PLAY_9_FILE), ac.getString(AppConfig.PLAY_9_REPLY));
+				return play(ac.getString(AppConfig.PLAY_9_NAME), ac.getString(AppConfig.PLAY_9_FILE), ac.getString(AppConfig.PLAY_9_REPLY), ac);
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_10_REQUEST))) {
-				return play(ac.getString(AppConfig.PLAY_10_NAME), ac.getString(AppConfig.PLAY_10_FILE), ac.getString(AppConfig.PLAY_10_REPLY));
+				return play(ac.getString(AppConfig.PLAY_10_NAME), ac.getString(AppConfig.PLAY_10_FILE), ac.getString(AppConfig.PLAY_10_REPLY), ac);
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PAUSE_REQUEST))) {
-				return pause(ac.getString(AppConfig.PAUSE_REPLY));
+				return pause(ac.getString(AppConfig.PAUSE_REPLY), ac);
 			}
 
 			// not sure what they've requested
 			return createReply(ac.getString(AppConfig.PLAY_GEN_REPLY));
 		});
 		
-		// run an idle check every minute
-		idleCheck = new Timer();
-		idleCheck.schedule(new IdleCheckTask(vc, vp), 1000, ac.getLong(AppConfig.IDLE_CHECK_MS));
+		// run an idle check every so often
+		createIdleCheck(ac.getLong(AppConfig.IDLE_CHECK_MS));
 	}
 	
+	private static void createIdleCheck(long period) {
+		if(idleCheck != null) {
+			idleCheck.cancel();
+			idleCheck = null;
+		}
+		
+		idleCheck = new Timer();
+		idleCheck.schedule(new IdleCheckTask(vc, vp), period, period);
+	}
+	
+	// return true during "active hours"
+	// return false during "off hours"
 	public static boolean timeCheck(AppConfig ac) {
 		Calendar now = Calendar.getInstance();
 		if (now.get(Calendar.HOUR_OF_DAY) < ac.getInt(AppConfig.IDLE_CHECK_START_HOUR) ||
@@ -99,6 +110,7 @@ public class Main {
 		return false;
 	}
 	
+	// create a twilio reply with the contents
 	public static String createReply(String contents) {
 		Body body = new Body.Builder(contents)
 				.build();
@@ -111,7 +123,11 @@ public class Main {
 		return twiml.toXml();
 	}
 	
-	public static String play(String name, String file, String reply) {
+	// launch a thread to play a song
+	public static String play(String name, String file, String reply, AppConfig ac) {
+		// reschedule the idle check
+		createIdleCheck(ac.getLong(AppConfig.IDLE_CHECK_MS));
+		
 		(new Thread() {
 			public void run() {
 				if(!vc.play(name, file)) {
@@ -125,7 +141,11 @@ public class Main {
 		return createReply(reply);
 	}
 	
-	public static String pause(String reply) {
+	// launch a thread to stop songs
+	public static String pause(String reply, AppConfig ac) {
+		// reschedule the idle check
+		createIdleCheck(ac.getLong(AppConfig.IDLE_CHECK_MS));
+				
 		(new Thread() {
 			public void run() {
 				if(!vc.stopActive()) {
@@ -137,6 +157,7 @@ public class Main {
 		return createReply(reply);
 	}
 	
+	// send an SMS
  	public static void sendMessage(String toPhone, String messageText) {
 		String sid = AppConfig.getInstance().getString(AppConfig.ACCOUNT_SID);
 		String auth = AppConfig.getInstance().getString(AppConfig.AUTH_TOKEN);

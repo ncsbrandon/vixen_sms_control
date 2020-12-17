@@ -2,29 +2,24 @@ package vixen;
 
 import java.io.IOException;
 import java.net.ConnectException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import process.HTTPAPIControl;
 import status.Root;
 
-public class VixenControl {
+public class VixenControl extends HTTPAPIControl {
 
 	private static Logger logger = LoggerFactory.getLogger(VixenControl.class.getSimpleName());
 
-	private String url = "";
 	private ObjectMapper om = new ObjectMapper();
 	private Root[] active = null;
-	private HttpClient client = HttpClient.newHttpClient();
 	
 	public VixenControl(String url) {
-		this.url = url;
+		super(url);
 	}
 
 	public synchronized boolean isActive() {
@@ -32,6 +27,73 @@ public class VixenControl {
 			return true;
 		
 		return false;
+	}
+
+	public synchronized boolean status() {
+		// request active songs
+		String response = null;
+		try {
+			response = get("api/play/status");
+		} catch (ConnectException e) {
+			logger.error("connection failure: " + e.getMessage());
+			active = null;
+			return false;		
+		} catch (IOException | InterruptedException e) {
+			logger.error("status failure: " + e.getMessage());
+			active = null;
+			return false;
+		}
+		
+		// parse the json
+		try {
+			if(response != null && response.length() > 0) {
+				active = om.readValue(response, Root[].class);
+				logger.info("["+active.length+"] active songs");
+			}else {
+				active = null;
+				logger.info("no active song");
+			}
+		} catch (Exception e) {
+			active = null;
+			logger.error("status response parse failure: " + e.getMessage());
+			return false;
+		}
+		
+		return true;
+	}
+
+	public synchronized boolean stopActive() {
+		// find out what's playing
+		if(!status())
+			return false;
+		
+		// stop them all
+		if(isActive()) {
+			for(Root song : active) {
+				stop(song.sequence.name, song.sequence.fileName);
+			}
+		}
+		
+		return true;
+	}
+	
+	private boolean stop(String name, String filename) {
+		// build the request body
+		StringBuilder requestBody = new StringBuilder();
+		requestBody.append("Name=" + name);
+		requestBody.append("&");
+		requestBody.append("FileName=" + filename);
+		
+		// post
+		try {
+			logger.info("stopping: " + name);
+			post("api/play/stopSequence", requestBody.toString());
+		} catch (IOException | InterruptedException e) {
+			logger.error("stop failure: " + e.getMessage());
+			return false;
+		}
+		
+		return true;
 	}
 	
 	public synchronized boolean play(String name, String file) {
@@ -50,130 +112,11 @@ public class VixenControl {
 			logger.info("requesting: " + name);
 			post("api/play/playSequence", requestBody.toString());
 		} catch (IOException | InterruptedException e) {
-			logger.error("play failure", e);
-			return false;
-		}
-		
-		return true;
-	}
-	
-	public synchronized boolean stopActive() {
-		// if there's a currently active song, stop it first
-		try {
-			status();
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			return false;
-		}
-		
-		if(isActive()) {
-			for(Root song : active) {
-				stop(song.sequence.name, song.sequence.fileName);
-			}
-		}
-		
-		return true;
-	}
-	
-	private boolean stop(String name, String filename) {
-		StringBuilder requestBody = new StringBuilder();
-		requestBody.append("Name=" + name);
-		requestBody.append("&");
-		requestBody.append("FileName=" + filename);
-		
-		try {
-			logger.info("stopping: " + name);
-			post("api/play/stopSequence", requestBody.toString());
-		} catch (IOException | InterruptedException e) {
-			logger.error("stop failure", e);
-			return false;
-		}
-		
-		return true;
-	}
-	
-	public synchronized boolean status() throws Exception {
-		String response = null;
-		try {
-			response = get("api/play/status");
-		} catch (ConnectException ce) {
-			throw new Exception("connection failure");		
-		} catch (IOException | InterruptedException e) {
-			logger.error("status failure", e);
-			response = "";
-		}
-		
-		try {
-			if(response != null && response.length() > 0) {
-				// parse the json
-				active = om.readValue(response, Root[].class);
-				logger.info("["+active.length+"] active songs");
-			}else {
-				active = null;
-				logger.info("no active song");
-			}
-		} catch (Exception e) {
-			active = null;
-			logger.error("status response parse failure", e);
+			logger.error("play failure: " + e.getMessage());
 			return false;
 		}
 		
 		return true;
 	}
 
-	private void post(String page, String requestBody) throws IOException, InterruptedException {
-		// build the request
-		HttpRequest request = HttpRequest.newBuilder()
-				.uri(URI.create(url + page))
-				.POST(HttpRequest.BodyPublishers.ofString(requestBody))
-				.header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
-				.header("Accept", "application/json, text/javascript, */*; q=0.01")
-				.build();
-
-		// logging
-		logger.debug("-> " + request.toString());
-		//Map<String, List<String>> requestHeaders = request.headers().map();
-		//for (Entry<String, List<String>> requestHeader : requestHeaders.entrySet()) {
-		//	logger.info("-> Header Name - " + requestHeader.getKey() + ", Value - " + requestHeader.getValue().toString());
-		//}
-		//logger.info("-> " + requestBody);
-
-		// send and receive
-		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-		// logging
-		logger.debug("<- " + response.toString());
-		//Map<String, List<String>> responseHeaders = response.headers().map();
-		//for (Entry<String, List<String>> responseHeader : responseHeaders.entrySet()) {
-		//	logger.info("<- Header Name - " + responseHeader.getKey() + ", Value - " + responseHeader.getValue().toString());
-		//}
-		logger.debug("<- " + response.body());
-	}
-	
-	private String get(String page) throws IOException, InterruptedException {
-		// build the request
-		HttpRequest request = HttpRequest.newBuilder()
-				.uri(URI.create(url + page))
-				.build();
-
-		// logging
-		logger.debug("-> " + request.toString());
-		//Map<String, List<String>> requestHeaders = request.headers().map();
-		//for (Entry<String, List<String>> requestHeader : requestHeaders.entrySet()) {
-		//	logger.info("-> Header Name - " + requestHeader.getKey() + ", Value - " + requestHeader.getValue().toString());
-		//}
-
-		// send and receive
-		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-		// logging
-		logger.debug("<- " + response.toString());
-		//Map<String, List<String>> responseHeaders = response.headers().map();
-		//for (Entry<String, List<String>> responseHeader : responseHeaders.entrySet()) {
-		//	logger.info("<- Header Name - " + responseHeader.getKey() + ", Value - " + responseHeader.getValue().toString());
-		//}
-		logger.debug("<- " + response.body());
-		
-		return response.body();
-	}
 }
