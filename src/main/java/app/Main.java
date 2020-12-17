@@ -4,7 +4,6 @@ import static spark.Spark.get;
 import static spark.Spark.post;
 
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.Timer;
 
 import org.slf4j.Logger;
@@ -49,7 +48,7 @@ public class Main {
 		post("/sms", (req, res) -> {
 			res.type("application/xml");
 			
-			if(timeCheck(ac))
+			if(ac.timeCheck())
 				return createReply(ac.getString(AppConfig.OFF_HOURS));
 
 			String requestBody = req.queryParamOrDefault("Body", "REQUEST_ERROR").trim();
@@ -99,19 +98,8 @@ public class Main {
 		idleCheck.schedule(new IdleCheckTask(vc, vp), period, period);
 	}
 	
-	// return true during "active hours"
-	// return false during "off hours"
-	public static boolean timeCheck(AppConfig ac) {
-		Calendar now = Calendar.getInstance();
-		if (now.get(Calendar.HOUR_OF_DAY) < ac.getInt(AppConfig.IDLE_CHECK_START_HOUR) ||
-			now.get(Calendar.HOUR_OF_DAY) > ac.getInt(AppConfig.IDLE_CHECK_STOP_HOUR))
-			return true;
-		
-		return false;
-	}
-	
 	// create a twilio reply with the contents
-	public static String createReply(String contents) {
+	private static String createReply(String contents) {
 		Body body = new Body.Builder(contents)
 				.build();
 		com.twilio.twiml.messaging.Message sms = new com.twilio.twiml.messaging.Message.Builder()
@@ -124,7 +112,7 @@ public class Main {
 	}
 	
 	// launch a thread to play a song
-	public static String play(String name, String file, String reply, AppConfig ac) {
+	private static String play(String name, String file, String reply, AppConfig ac) {
 		// reschedule the idle check
 		createIdleCheck(ac.getLong(AppConfig.IDLE_CHECK_MS));
 		
@@ -142,7 +130,7 @@ public class Main {
 	}
 	
 	// launch a thread to stop songs
-	public static String pause(String reply, AppConfig ac) {
+	private static String pause(String reply, AppConfig ac) {
 		// reschedule the idle check
 		createIdleCheck(ac.getLong(AppConfig.IDLE_CHECK_MS));
 				
@@ -158,7 +146,7 @@ public class Main {
 	}
 	
 	// send an SMS
- 	public static void sendMessage(String toPhone, String messageText) {
+ 	private static void sendMessage(String toPhone, String messageText) {
 		String sid = AppConfig.getInstance().getString(AppConfig.ACCOUNT_SID);
 		String auth = AppConfig.getInstance().getString(AppConfig.AUTH_TOKEN);
 		String fromPhone = AppConfig.getInstance().getString(AppConfig.FROM_PHONE);

@@ -1,14 +1,16 @@
 package vixen;
 
-import java.util.Calendar;
 import java.util.TimerTask;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import config.AppConfig;
 import process.VixenProcess;
 
 public class IdleCheckTask extends TimerTask {
 
-	//private static Logger logger = LoggerFactory.getLogger(IdleCheckTask.class.getSimpleName());
+	private static Logger logger = LoggerFactory.getLogger(IdleCheckTask.class.getSimpleName());
 
 	private VixenControl vc = null;
 	private VixenProcess vp = null;
@@ -20,14 +22,13 @@ public class IdleCheckTask extends TimerTask {
 
 	@Override
 	public void run() {
+		logger.debug("idle check task");
+		
 		// get the settings
 		AppConfig ac = AppConfig.getInstance();
 		
 		// check the time
-		Calendar now = Calendar.getInstance();
-		if (now.get(Calendar.HOUR_OF_DAY) < ac.getInt(AppConfig.IDLE_CHECK_START_HOUR) ||
-			now.get(Calendar.HOUR_OF_DAY) > ac.getInt(AppConfig.IDLE_CHECK_STOP_HOUR)) {
-			
+		if (!ac.timeCheck()) {
 			// stop (if we started) vixen, during off hours
 			if(vp.isRunning())
 				vp.stop();

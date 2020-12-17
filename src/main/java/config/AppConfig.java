@@ -3,6 +3,7 @@ package config;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -104,5 +105,16 @@ public class AppConfig {
 	
 	public long getLong(String key) {
 		return Long.valueOf(getString(key));
+	}
+	
+	// return true during "active hours"
+	// return false during "off hours"
+	public boolean timeCheck() {
+		Calendar now = Calendar.getInstance();
+		if (now.get(Calendar.HOUR_OF_DAY) < getInt(AppConfig.IDLE_CHECK_START_HOUR) ||
+			now.get(Calendar.HOUR_OF_DAY) > getInt(AppConfig.IDLE_CHECK_STOP_HOUR))
+			return true;
+		
+		return false;
 	}
 }
