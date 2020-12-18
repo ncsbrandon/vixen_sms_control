@@ -4,6 +4,7 @@ import static spark.Spark.get;
 import static spark.Spark.post;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Timer;
 
 import org.slf4j.Logger;
@@ -98,8 +99,19 @@ public class Main {
 		idleCheck.schedule(new IdleCheckTask(vc, vp), period, period);
 	}
 	
+	private static void holdOffFromIdleCheck(Calendar holdOff) {
+		if(holdOff == null)
+			return;
+				
+		while(holdOff.after(Calendar.getInstance())) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {}
+		}
+	}
+	
 	// create a twilio reply with the contents
-	private static String createReply(String contents) {
+ 	private static String createReply(String contents) {
 		Body body = new Body.Builder(contents)
 				.build();
 		com.twilio.twiml.messaging.Message sms = new com.twilio.twiml.messaging.Message.Builder()
@@ -115,6 +127,8 @@ public class Main {
 	private static String play(String name, String file, String reply, AppConfig ac) {
 		// reschedule the idle check
 		createIdleCheck(ac.getLong(AppConfig.IDLE_CHECK_MS));
+		
+		holdOffFromIdleCheck(ac.IdleCheckHoldoff);
 		
 		(new Thread() {
 			public void run() {
@@ -134,6 +148,8 @@ public class Main {
 		// reschedule the idle check
 		createIdleCheck(ac.getLong(AppConfig.IDLE_CHECK_MS));
 				
+		holdOffFromIdleCheck(ac.IdleCheckHoldoff);
+		
 		(new Thread() {
 			public void run() {
 				if(!vc.stopActive()) {

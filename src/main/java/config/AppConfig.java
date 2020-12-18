@@ -73,6 +73,8 @@ public class AppConfig {
 	private static final String PROP_FILENAME = "config.properties";
 	private Properties prop = new Properties();
 
+	public Calendar IdleCheckHoldoff = null;
+	
 	// singleton
 	private static AppConfig instance = new AppConfig();
 	private AppConfig() {}

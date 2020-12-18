@@ -1,5 +1,6 @@
 package vixen;
 
+import java.util.Calendar;
 import java.util.TimerTask;
 
 import org.slf4j.Logger;
@@ -38,9 +39,15 @@ public class IdleCheckTask extends TimerTask {
 		}
 		
 		// start vixen if it isn't running
-		if(!vp.isRunning())
+		if(!vp.isRunning()) {
+			// pauses to let vixen complete it's startup
 			vp.start();
+		}
 
+		// used to hold off any user requests about to happen
+		ac.IdleCheckHoldoff = Calendar.getInstance();
+		ac.IdleCheckHoldoff.add(Calendar.SECOND, 5);
+				
 		// if we can check status,
 		if(vc.status()) {	
 			// and if it's not playing something,
