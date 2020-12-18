@@ -49,7 +49,7 @@ public class Main {
 		post("/sms", (req, res) -> {
 			res.type("application/xml");
 			
-			if(ac.timeCheck())
+			if(!ac.timeCheck())
 				return createReply(ac.getString(AppConfig.OFF_HOURS));
 
 			String requestBody = req.queryParamOrDefault("Body", "REQUEST_ERROR").trim();

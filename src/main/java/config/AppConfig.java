@@ -27,7 +27,7 @@ public class AppConfig {
 	public static final String PLAY_2_REQUEST = "PLAY_2_REQUEST";
 	public static final String PLAY_2_REPLY = "PLAY_2_REPLY";
 	public static final String PLAY_2_NAME = "PLAY_2_NAME";
-	public static final String PLAY_2_FILE = "PLAY_2_FILE";	
+	public static final String PLAY_2_FILE = "PLAY_2_FILE";
 	public static final String PLAY_3_REQUEST = "PLAY_3_REQUEST";
 	public static final String PLAY_3_REPLY = "PLAY_3_REPLY";
 	public static final String PLAY_3_NAME = "PLAY_3_NAME";
@@ -35,7 +35,7 @@ public class AppConfig {
 	public static final String PLAY_4_REQUEST = "PLAY_4_REQUEST";
 	public static final String PLAY_4_REPLY = "PLAY_4_REPLY";
 	public static final String PLAY_4_NAME = "PLAY_4_NAME";
-	public static final String PLAY_4_FILE = "PLAY_4_FILE";	
+	public static final String PLAY_4_FILE = "PLAY_4_FILE";
 	public static final String PLAY_5_REQUEST = "PLAY_5_REQUEST";
 	public static final String PLAY_5_REPLY = "PLAY_5_REPLY";
 	public static final String PLAY_5_NAME = "PLAY_5_NAME";
@@ -69,12 +69,12 @@ public class AppConfig {
 	public static final String IDLE_CHECK_STOP_HOUR = "IDLE_CHECK_STOP_HOUR";
 	public static final String PLAY_IDLE_NAME = "PLAY_IDLE_NAME";
 	public static final String PLAY_IDLE_FILE = "PLAY_IDLE_FILE";
-	
+
 	private static final String PROP_FILENAME = "config.properties";
 	private Properties prop = new Properties();
 
 	public Calendar IdleCheckHoldoff = null;
-	
+
 	// singleton
 	private static AppConfig instance = new AppConfig();
 	private AppConfig() {}
@@ -90,33 +90,33 @@ public class AppConfig {
 			throw new FileNotFoundException("property file '" + PROP_FILENAME + "' not found in the classpath");
 		}
 	}
-	
+
 	public String getString(String key) {
 		String val = prop.getProperty(key);
 		if(val == null) {
 			logger.error("key ["+key+"] not found");
 			return "";
 		}
-		
+
 		return val;
 	}
-	
+
 	public int getInt(String key) {
 		return Integer.valueOf(getString(key));
 	}
-	
+
 	public long getLong(String key) {
 		return Long.valueOf(getString(key));
 	}
-	
+
 	// return true during "active hours"
 	// return false during "off hours"
 	public boolean timeCheck() {
 		Calendar now = Calendar.getInstance();
-		if (now.get(Calendar.HOUR_OF_DAY) < getInt(AppConfig.IDLE_CHECK_START_HOUR) ||
-			now.get(Calendar.HOUR_OF_DAY) > getInt(AppConfig.IDLE_CHECK_STOP_HOUR))
+		if (now.get(Calendar.HOUR_OF_DAY) >= getInt(AppConfig.IDLE_CHECK_START_HOUR) &&
+			now.get(Calendar.HOUR_OF_DAY) < getInt(AppConfig.IDLE_CHECK_STOP_HOUR))
 			return true;
-		
+
 		return false;
 	}
 }
