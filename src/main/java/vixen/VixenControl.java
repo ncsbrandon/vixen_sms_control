@@ -22,11 +22,11 @@ public class VixenControl extends HTTPAPIControl {
 		super(url);
 	}
 
-	public synchronized boolean isActive() {
-		if(active != null && active.length > 0)
-			return true;
+	public synchronized int numActive() {
+		if(active != null)
+			return active.length;
 		
-		return false;
+		return 0;
 	}
 
 	public synchronized boolean status() {
@@ -68,7 +68,7 @@ public class VixenControl extends HTTPAPIControl {
 			return false;
 		
 		// stop them all
-		if(isActive()) {
+		if(numActive() > 0) {
 			for(Root song : active) {
 				stop(song.sequence.name, song.sequence.fileName);
 			}
@@ -77,7 +77,7 @@ public class VixenControl extends HTTPAPIControl {
 		return true;
 	}
 	
-	private boolean stop(String name, String filename) {
+	public boolean stop(String name, String filename) {
 		// build the request body
 		StringBuilder requestBody = new StringBuilder();
 		requestBody.append("Name=" + name);
@@ -118,5 +118,4 @@ public class VixenControl extends HTTPAPIControl {
 		
 		return true;
 	}
-
 }

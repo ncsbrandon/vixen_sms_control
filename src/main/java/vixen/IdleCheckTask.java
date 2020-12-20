@@ -47,13 +47,19 @@ public class IdleCheckTask extends TimerTask {
 		// if we can check status,
 		if(vc.status()) {
 			// and if it's not playing something,
-			if (!vc.isActive()) {
+			if (vc.numActive() == 0) {
 				// used to hold off any user requests about to happen
 				ac.IdleCheckHoldoff = Calendar.getInstance();
 				ac.IdleCheckHoldoff.add(Calendar.SECOND, 10);
 
 				// play the default
 				vc.play(ac.getString(AppConfig.PLAY_IDLE_NAME), ac.getString(AppConfig.PLAY_IDLE_FILE));
+			}
+			
+			// i'f it's playing more than 1 right now
+			if(vc.numActive() > 1) {
+				// stop the default
+				vc.stop(ac.getString(AppConfig.PLAY_IDLE_NAME), ac.getString(AppConfig.PLAY_IDLE_FILE));
 			}
 		}
 	}
