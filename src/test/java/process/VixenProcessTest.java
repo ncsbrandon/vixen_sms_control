@@ -11,9 +11,11 @@ public class VixenProcessTest {
 		VixenProcess vp = new VixenProcess();
 		
 		assertFalse(vp.isRunning());
+		
 		vp.start();
 		safeSleep(15000);
 		assertTrue(vp.isRunning());
+		
 		vp.stop();
 		safeSleep(10000);
 		assertFalse(vp.isRunning());

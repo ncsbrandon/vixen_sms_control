@@ -1,5 +1,7 @@
 package vixen;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,22 +16,22 @@ public class VixenControlTest {
 		logger.info("testing");
 		
 		// stop nothing		
-		poster.stopActive();
+		assertTrue(poster.stopActive());
 		
 		// play test
-		poster.play("test", "C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\test.tim");
+		assertTrue(poster.play("test", "C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\test.tim"));
 		safeSleep(5000);
 
 		// interrupt test with tree
-		poster.play("tree", "C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\tree.tim");
+		assertTrue(poster.play("tree", "C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\tree.tim"));
 		safeSleep(5000);
 		
 		// stop tree
-		poster.stopActive();
+		assertTrue(poster.stopActive());
 		safeSleep(5000);
 		
 		// nothing playing
-		poster.status();
+		assertTrue(poster.status());
 	}
 	
 	void safeSleep(long ms) {

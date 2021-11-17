@@ -33,7 +33,7 @@ public class HTTPAPIControl {
 				.build();
 
 		// logging
-		logger.debug("-> " + request.toString());
+		logger.debug("-> {}", request);
 		//Map<String, List<String>> requestHeaders = request.headers().map();
 		//for (Entry<String, List<String>> requestHeader : requestHeaders.entrySet()) {
 		//	logger.info("-> Header Name - " + requestHeader.getKey() + ", Value - " + requestHeader.getValue().toString());
@@ -44,12 +44,12 @@ public class HTTPAPIControl {
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
 		// logging
-		logger.debug("<- " + response.toString());
+		logger.debug("<- {}", response);
 		//Map<String, List<String>> responseHeaders = response.headers().map();
 		//for (Entry<String, List<String>> responseHeader : responseHeaders.entrySet()) {
 		//	logger.info("<- Header Name - " + responseHeader.getKey() + ", Value - " + responseHeader.getValue().toString());
 		//}
-		logger.debug("<- " + response.body());
+		logger.debug("<- {}", response.body());
 	}
 	
 	protected String get(String page) throws IOException, InterruptedException {
@@ -59,7 +59,7 @@ public class HTTPAPIControl {
 				.build();
 
 		// logging
-		logger.debug("-> " + request.toString());
+		logger.debug("-> {}", request);
 		//Map<String, List<String>> requestHeaders = request.headers().map();
 		//for (Entry<String, List<String>> requestHeader : requestHeaders.entrySet()) {
 		//	logger.info("-> Header Name - " + requestHeader.getKey() + ", Value - " + requestHeader.getValue().toString());
@@ -69,12 +69,12 @@ public class HTTPAPIControl {
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
 		// logging
-		logger.debug("<- " + response.toString());
+		logger.debug("<- {}", response);
 		//Map<String, List<String>> responseHeaders = response.headers().map();
 		//for (Entry<String, List<String>> responseHeader : responseHeaders.entrySet()) {
 		//	logger.info("<- Header Name - " + responseHeader.getKey() + ", Value - " + responseHeader.getValue().toString());
 		//}
-		logger.debug("<- " + response.body());
+		logger.debug("<- {}", response.body());
 		
 		return response.body();
 	}

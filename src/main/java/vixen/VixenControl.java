@@ -35,27 +35,30 @@ public class VixenControl extends HTTPAPIControl {
 		try {
 			response = get("api/play/status");
 		} catch (ConnectException e) {
-			logger.error("connection failure: " + e.getMessage());
+			logger.error("connection failure: {}", e.getMessage());
 			active = null;
 			return false;		
-		} catch (IOException | InterruptedException e) {
-			logger.error("status failure: " + e.getMessage());
+		} catch (IOException e1) {
+			logger.error("status failure: {}", e1.getMessage());
 			active = null;
 			return false;
+		} catch (InterruptedException e2) {
+			logger.error("status interrupted: {}", e2.getMessage());
+			Thread.currentThread().interrupt();
 		}
 		
 		// parse the json
 		try {
 			if(response != null && response.length() > 0) {
 				active = om.readValue(response, Root[].class);
-				logger.info("["+active.length+"] active songs");
+				logger.info("[{}] active songs", active.length);
 			}else {
 				active = null;
 				logger.info("no active song");
 			}
 		} catch (Exception e) {
 			active = null;
-			logger.error("status response parse failure: " + e.getMessage());
+			logger.error("status response parse failure: {}", e.getMessage());
 			return false;
 		}
 		
@@ -86,11 +89,15 @@ public class VixenControl extends HTTPAPIControl {
 		
 		// post
 		try {
-			logger.info("stopping: " + name);
+			logger.info("stopping: {}", name);
 			post("api/play/stopSequence", requestBody.toString());
-		} catch (IOException | InterruptedException e) {
-			logger.error("stop failure: " + e.getMessage());
+		} catch (IOException e1) {
+			logger.error("stop failure: {}", e1.getMessage());
+			active = null;
 			return false;
+		} catch (InterruptedException e2) {
+			logger.error("stop interrupted: {}", e2.getMessage());
+			Thread.currentThread().interrupt();
 		}
 		
 		return true;
@@ -109,11 +116,15 @@ public class VixenControl extends HTTPAPIControl {
 
 		// post
 		try {
-			logger.info("requesting: " + name);
+			logger.info("requesting: {}", name);
 			post("api/play/playSequence", requestBody.toString());
-		} catch (IOException | InterruptedException e) {
-			logger.error("play failure: " + e.getMessage());
+		} catch (IOException e1) {
+			logger.error("play failure: {}", e1.getMessage());
+			active = null;
 			return false;
+		} catch (InterruptedException e2) {
+			logger.error("play interrupted: {}", e2.getMessage());
+			Thread.currentThread().interrupt();
 		}
 		
 		return true;

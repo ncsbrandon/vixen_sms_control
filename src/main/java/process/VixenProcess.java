@@ -10,27 +10,25 @@ public class VixenProcess {
 
 	private static Logger logger = LoggerFactory.getLogger(VixenProcess.class.getSimpleName());
 
-	private static String VIXEN = "C:\\Program Files\\Vixen\\VixenApplication.exe";
-	private static String DIR = "C:\\Program Files\\Vixen\\";
-	
+	private static final String VIXEN = "C:\\Program Files\\Vixen\\VixenApplication.exe";
+	private static final String DIR = "C:\\Program Files\\Vixen\\";
+
 	private Process p = null;
-	
-	public VixenProcess() {	}
-	
+
+	public VixenProcess() {
+		// constructor
+	}
+
 	public boolean isRunning() {
 		// is alive
-		if(p != null && p.isAlive())
-			return true;
-		
-		// is dead or unknown
-		return false;
+		return (p != null && p.isAlive());
 	}
-	
+
 	public void start() {
 		// already running
-		if(isRunning())
+		if (isRunning())
 			return;
-		
+
 		// start the application
 		try {
 			ProcessBuilder pb = new ProcessBuilder(VIXEN);
@@ -38,28 +36,29 @@ public class VixenProcess {
 			p = pb.start();
 			logger.info("vixen started");
 		} catch (IOException e) {
-			logger.error("start vixen failed: " + e.getMessage());
+			logger.error("start vixen failed: {}", e.getMessage());
 			p = null;
 			return;
 		}
-		
+
 		// wait for it to start
 		try {
 			Thread.sleep(10000);
 		} catch (InterruptedException e) {
-			logger.error("start sleep interrupted: " + e.getMessage());
+			logger.error("start sleep interrupted: {}", e.getMessage());
+			Thread.currentThread().interrupt();
 		}
 	}
-	
+
 	public void stop() {
 		// already stopped
-		if(!isRunning())
+		if (!isRunning())
 			return;
-		
+
 		// request graceful stop
 		p.destroy();
 		logger.info("vixen stopped");
-		
+
 		p = null;
 	}
 }

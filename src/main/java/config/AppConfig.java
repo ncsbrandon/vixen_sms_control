@@ -73,7 +73,7 @@ public class AppConfig {
 	private static final String PROP_FILENAME = "config.properties";
 	private Properties prop = new Properties();
 
-	public Calendar IdleCheckHoldoff = null;
+	public Calendar idleCheckHoldoff = null;
 
 	// singleton
 	private static AppConfig instance = new AppConfig();
@@ -94,7 +94,7 @@ public class AppConfig {
 	public String getString(String key) {
 		String val = prop.getProperty(key);
 		if(val == null) {
-			logger.error("key ["+key+"] not found");
+			logger.error("key [{}] not found", val);
 			return "";
 		}
 
@@ -113,10 +113,7 @@ public class AppConfig {
 	// return false during "off hours"
 	public boolean timeCheck() {
 		Calendar now = Calendar.getInstance();
-		if (now.get(Calendar.HOUR_OF_DAY) >= getInt(AppConfig.IDLE_CHECK_START_HOUR) &&
-			now.get(Calendar.HOUR_OF_DAY) < getInt(AppConfig.IDLE_CHECK_STOP_HOUR))
-			return true;
-
-		return false;
+		return (now.get(Calendar.HOUR_OF_DAY) >= getInt(AppConfig.IDLE_CHECK_START_HOUR) &&
+			    now.get(Calendar.HOUR_OF_DAY) < getInt(AppConfig.IDLE_CHECK_STOP_HOUR));
 	}
 }

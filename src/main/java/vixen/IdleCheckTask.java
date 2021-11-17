@@ -31,7 +31,7 @@ public class IdleCheckTask extends TimerTask {
 		// check the time
 		if (!ac.timeCheck()) {
 			// stop (if we started) vixen, during off hours
-			if(vp.isRunning())
+			if (vp.isRunning())
 				vp.stop();
 
 			// stop here
@@ -39,25 +39,25 @@ public class IdleCheckTask extends TimerTask {
 		}
 
 		// start vixen if it isn't running
-		if(!vp.isRunning()) {
+		if (!vp.isRunning()) {
 			// pauses to let vixen complete it's startup
 			vp.start();
 		}
 
 		// if we can check status,
-		if(vc.status()) {
+		if (vc.status()) {
 			// and if it's not playing something,
 			if (vc.numActive() == 0) {
 				// used to hold off any user requests about to happen
-				ac.IdleCheckHoldoff = Calendar.getInstance();
-				ac.IdleCheckHoldoff.add(Calendar.SECOND, 10);
+				ac.idleCheckHoldoff = Calendar.getInstance();
+				ac.idleCheckHoldoff.add(Calendar.SECOND, 10);
 
 				// play the default
 				vc.play(ac.getString(AppConfig.PLAY_IDLE_NAME), ac.getString(AppConfig.PLAY_IDLE_FILE));
 			}
-			
+
 			// i'f it's playing more than 1 right now
-			if(vc.numActive() > 1) {
+			if (vc.numActive() > 1) {
 				// stop the default
 				vc.stop(ac.getString(AppConfig.PLAY_IDLE_NAME), ac.getString(AppConfig.PLAY_IDLE_FILE));
 			}

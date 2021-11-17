@@ -31,19 +31,20 @@ public class Main {
 	
 	public static void main(String[] args) {
 		logger.info("starting application");
-		
 		AppConfig ac = AppConfig.getInstance();
 		try {
 			ac.load();
 			logger.info("config loaded");
 		} catch (IOException e) {
-			logger.error("config loading error: " + e.getMessage());
+			logger.error("config loading error: {}", e.getMessage());
 			return;
 		}
 		
+		logger.info("creating vixen objects");
 		vc = new VixenControl(ac.getString(AppConfig.VIXEN_URL));
 		vp = new VixenProcess();
 		
+		logger.info("setting up endpoints");
 		get("/", (req, res) -> "404");
 
 		post("/sms", (req, res) -> {
@@ -53,7 +54,7 @@ public class Main {
 				return createReply(ac.getString(AppConfig.OFF_HOURS));
 
 			String requestBody = req.queryParamOrDefault("Body", "REQUEST_ERROR").trim();
-			logger.info("request body: " + requestBody);
+			logger.info("request body: {}",  requestBody);
 			
 			if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_REQUEST))) {
 				return createReply(ac.getString(AppConfig.PLAY_MENU));
@@ -106,7 +107,10 @@ public class Main {
 		while(holdOff.after(Calendar.getInstance())) {
 			try {
 				Thread.sleep(100);
-			} catch (InterruptedException e) {}
+			} catch (InterruptedException e) {
+				logger.error("holdOffFromIdleCheck interrupted");
+				Thread.currentThread().interrupt();
+			}
 		}
 	}
 	
@@ -128,9 +132,10 @@ public class Main {
 		// reschedule the idle check
 		createIdleCheck(ac.getLong(AppConfig.IDLE_CHECK_MS));
 		
-		holdOffFromIdleCheck(ac.IdleCheckHoldoff);
+		holdOffFromIdleCheck(ac.idleCheckHoldoff);
 		
 		(new Thread() {
+			@Override
 			public void run() {
 				if(!vc.play(name, file)) {
 					logger.error("play error");
@@ -148,12 +153,13 @@ public class Main {
 		// reschedule the idle check
 		createIdleCheck(ac.getLong(AppConfig.IDLE_CHECK_MS));
 				
-		holdOffFromIdleCheck(ac.IdleCheckHoldoff);
+		holdOffFromIdleCheck(ac.idleCheckHoldoff);
 		
 		(new Thread() {
+			@Override
 			public void run() {
 				if(!vc.stopActive()) {
-					logger.error("pause error");
+					logger.error("stop error");
 				}
 			}
 		}).start();
