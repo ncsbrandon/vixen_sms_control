@@ -43,7 +43,7 @@ public class VixenProcess {
 
 		// wait for it to start
 		try {
-			Thread.sleep(10000);
+			Thread.sleep(15000);
 		} catch (InterruptedException e) {
 			logger.error("start sleep interrupted: {}", e.getMessage());
 			Thread.currentThread().interrupt();

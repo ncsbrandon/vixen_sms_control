@@ -54,12 +54,30 @@ public class IdleCheckTask extends TimerTask {
 
 				// play the default
 				vc.play(ac.getString(AppConfig.PLAY_IDLE_NAME), ac.getString(AppConfig.PLAY_IDLE_FILE));
+				
+				// wait for it to start
+				try {
+					logger.info("wait for {}", ac.getString(AppConfig.PLAY_IDLE_NAME));
+					Thread.sleep(15000);
+				} catch (InterruptedException e) {
+					logger.error("start sleep interrupted: {}", e.getMessage());
+					Thread.currentThread().interrupt();
+				}
 			}
 
 			// i'f it's playing more than 1 right now
 			if (vc.numActive() > 1) {
 				// stop the default
 				vc.stop(ac.getString(AppConfig.PLAY_IDLE_NAME), ac.getString(AppConfig.PLAY_IDLE_FILE));
+				
+				// wait for it to start
+				try {
+					logger.info("wait for it to stop");
+					Thread.sleep(15000);
+				} catch (InterruptedException e) {
+					logger.error("start sleep interrupted: {}", e.getMessage());
+					Thread.currentThread().interrupt();
+				}
 			}
 		}
 	}
