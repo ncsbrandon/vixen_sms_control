@@ -24,3 +24,4 @@ hs_err_pid*
 /target/
 /config.properties
 .metadata/
+log4j.properties
