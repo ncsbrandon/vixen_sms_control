@@ -28,9 +28,10 @@ public class Main {
 	private static VixenControl vc;
 	private static VixenProcess vp;
 	private static Timer idleCheck = null;
-	
+		
 	public static void main(String[] args) {
 		logger.info("starting application");
+		System.out.println("classpath: " + System.getProperty("java.class.path"));
 		AppConfig ac = AppConfig.getInstance();
 		try {
 			ac.load();
@@ -39,6 +40,8 @@ public class Main {
 			logger.error("config loading error: {}", e.getMessage());
 			return;
 		}
+		
+		logger.debug("debug logging");
 		
 		logger.info("creating vixen objects");
 		vc = new VixenControl(ac.getString(AppConfig.VIXEN_URL));
@@ -87,7 +90,9 @@ public class Main {
 		});
 		
 		// run an idle check every so often
-		createIdleCheck(ac.getLong(AppConfig.IDLE_CHECK_MS));
+		long checkms = ac.getLong(AppConfig.IDLE_CHECK_MS);
+		logger.info("creating idle check [{}]", checkms);
+		createIdleCheck(checkms);
 	}
 	
 	private static void createIdleCheck(long period) {
@@ -179,6 +184,6 @@ public class Main {
 				.creator(new PhoneNumber(toPhone), new PhoneNumber(fromPhone), messageText)
 				.create();
 
-		logger.debug(message.getSid());
+		logger.info("sent [{}]", message.getSid());
 	}
 }
