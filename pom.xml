@@ -26,5 +26,10 @@
 	  <artifactId>twilio</artifactId>
 	  <version>8.4.0</version>
 	</dependency>
+  	<dependency>
+    	<groupId>com.github.purejavacomm</groupId>
+    	<artifactId>purejavacomm</artifactId>
+    	<version>1.0.1.RELEASE</version>
+	</dependency>
   </dependencies>
 </project>

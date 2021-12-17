@@ -69,7 +69,8 @@ public class AppConfig {
 	public static final String IDLE_CHECK_STOP_HOUR = "IDLE_CHECK_STOP_HOUR";
 	public static final String PLAY_IDLE_NAME = "PLAY_IDLE_NAME";
 	public static final String PLAY_IDLE_FILE = "PLAY_IDLE_FILE";
-
+	public static final String PORT_CHECK_NAME = "PORT_CHECK_NAME";
+	
 	private static final String PROP_FILENAME = "config.properties";
 	private Properties prop = new Properties();
 

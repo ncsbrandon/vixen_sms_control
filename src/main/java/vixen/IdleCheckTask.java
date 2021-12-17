@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 
 import config.AppConfig;
 import process.VixenProcess;
+import purejavacomm.CommPortIdentifier;
+import purejavacomm.NoSuchPortException;
 
 public class IdleCheckTask extends TimerTask {
 
@@ -30,7 +32,7 @@ public class IdleCheckTask extends TimerTask {
 
 		// check the time
 		if (!ac.timeCheck()) {
-			logger.debug("Off hours");
+			logger.debug("off hours");
 			
 			// stop (if we started) vixen, during off hours
 			if (vp.isRunning())
@@ -40,6 +42,15 @@ public class IdleCheckTask extends TimerTask {
 			return;
 		}
 
+		// check if the ports exist
+		try {
+			String portName = ac.getString(AppConfig.PORT_CHECK_NAME);
+			CommPortIdentifier.getPortIdentifier(portName);
+		} catch (NoSuchPortException e1) {
+			logger.debug("wait for the ports to appear");
+			return;
+		}
+		
 		// start vixen if it isn't running
 		if (!vp.isRunning()) {
 			logger.debug("Start vixen");
