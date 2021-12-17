@@ -7,6 +7,7 @@ VIXEN_URL=http://localhost:8888/
 IDLE_CHECK_MS=5000
 IDLE_CHECK_START_HOUR=16
 IDLE_CHECK_STOP_HOUR=23
+PORT_CHECK_NAME=COM2
 PLAY_IDLE_NAME=tree
 PLAY_IDLE_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3 Christmas tree\\Sequence\\tree.tim
 
