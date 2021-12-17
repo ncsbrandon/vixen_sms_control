@@ -30,6 +30,8 @@ public class IdleCheckTask extends TimerTask {
 
 		// check the time
 		if (!ac.timeCheck()) {
+			logger.debug("Off hours");
+			
 			// stop (if we started) vixen, during off hours
 			if (vp.isRunning())
 				vp.stop();
@@ -40,6 +42,7 @@ public class IdleCheckTask extends TimerTask {
 
 		// start vixen if it isn't running
 		if (!vp.isRunning()) {
+			logger.debug("Start vixen");
 			// pauses to let vixen complete it's startup
 			vp.start();
 		}

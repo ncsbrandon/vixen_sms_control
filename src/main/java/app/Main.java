@@ -89,6 +89,8 @@ public class Main {
 			return createReply(ac.getString(AppConfig.PLAY_GEN_REPLY));
 		});
 		
+		logger.info("finished endoints");
+		
 		// run an idle check every so often
 		long checkms = ac.getLong(AppConfig.IDLE_CHECK_MS);
 		logger.info("creating idle check [{}]", checkms);

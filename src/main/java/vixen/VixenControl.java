@@ -51,7 +51,9 @@ public class VixenControl extends HTTPAPIControl {
 		try {
 			if(response != null && response.length() > 0) {
 				active = om.readValue(response, Root[].class);
-				logger.info("[{}] active songs", active.length);
+				
+				if(active.length != 1)
+					logger.info("[{}] active songs", active.length);
 			}else {
 				active = null;
 				logger.info("no active song");
