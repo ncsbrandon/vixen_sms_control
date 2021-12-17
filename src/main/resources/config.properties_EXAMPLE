@@ -4,55 +4,68 @@ FROM_PHONE=[TWILIO PHONE]
 MY_PHONE=[MY PHONE]
 VIXEN_URL=http://localhost:8888/
 
-IDLE_CHECK_MS=30000
-IDLE_CHECK_START_HOUR=12
+IDLE_CHECK_MS=5000
+IDLE_CHECK_START_HOUR=16
 IDLE_CHECK_STOP_HOUR=23
-PORT_CHECK_NAME=COM2
 PLAY_IDLE_NAME=tree
-PLAY_IDLE_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\tree.tim
+PLAY_IDLE_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3 Christmas tree\\Sequence\\tree.tim
 
 PLAY_REQUEST=play
-PLAY_MENU=Tune your radio to 88.3 FM and then select a song:\n\
+PLAY_MENU=Tune your radio to 88.3 FM and then select a song by number:\n\
 1 - Wizards in Winter\n\
-2 - Red and White From State\n\
-3 - Resonance\n\
-4 - Christmas tree (no music)\n\
-5 - Mullett Man\n\
-6 - We Wish You a Merry Christmas (by Hannah)\n\
+2 - We Wish You a Merry Christmas (by Hannah)\n\
+3 - Feel like Christmas\n\
+4 - Red and White From State\n\
+5 - Resonance\n\
+6 - Mullet Matt\n\
+7 - Christmas tree (no music)\n\
 \n\
 and more coming soon!!
 
-OFF_HOURS=I'm turned off right now, come back later
+OFF_HOURS=Sorry, I'm turned off right now.  Come back at 6pm.
 
 PLAY_1_REQUEST=1
 PLAY_1_REPLY=Loading Wizards in Winter by Trans-Siberian Orchestra...
 PLAY_1_NAME=wizards
-PLAY_1_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\wizards.tim
-	
+PLAY_1_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3 Christmas tree\\Sequence\\wizards.tim
+
 PLAY_2_REQUEST=2
-PLAY_2_REPLY=Loading Red and White From State by NC State Marching Band...
-PLAY_2_NAME=red_and_white
-PLAY_2_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\red_and_white.tim
-	
+PLAY_2_REPLY=Loading We Wish You a Merry Christmas...
+PLAY_2_NAME=wwyamc
+PLAY_2_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3 Christmas tree\\Sequence\\wwyamc.tim
+
 PLAY_3_REQUEST=3
-PLAY_3_REPLY=Loading Resonance by Home...
-PLAY_3_NAME=one
-PLAY_3_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\one.tim
+PLAY_3_REPLY=Loading You Make It Feel Like Christmas by Gwen Stefani...
+PLAY_3_NAME=feel_like_christmas
+PLAY_3_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3 Christmas tree\\Sequence\\feel_like_christmas.tim
 
 PLAY_4_REQUEST=4
-PLAY_4_REPLY=Loading Christmas tree...
-PLAY_4_NAME=tree
-PLAY_4_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\tree.tim
-
-PLAY_5_REQUEST=5
-PLAY_5_REPLY=Loading a Matt Cornelius...
-PLAY_5_NAME=matt
-PLAY_5_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\matt.tim
+PLAY_4_REPLY=Loading Red and White From State by NC State Marching Band...
+PLAY_4_NAME=red_and_white
+PLAY_4_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3 Christmas tree\\Sequence\\red_and_white.tim
 	
+PLAY_5_REQUEST=5
+PLAY_5_REPLY=Loading Resonance by Home...
+PLAY_5_NAME=one
+PLAY_5_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3 Christmas tree\\Sequence\\one.tim
+
 PLAY_6_REQUEST=6
-PLAY_6_REPLY=Loading a test pattern...
-PLAY_6_NAME=test
-PLAY_6_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3\\Sequence\\test.tim
+PLAY_6_REPLY=Loading a Matt Cornelius...
+PLAY_6_NAME=matt
+PLAY_6_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3 Christmas tree\\Sequence\\matt.tim
+
+PLAY_7_REQUEST=7
+PLAY_7_REPLY=Loading Christmas tree...
+PLAY_7_NAME=tree
+PLAY_7_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3 Christmas tree\\Sequence\\tree.tim
+	
+PLAY_8_REQUEST=8
+PLAY_8_REPLY=Loading a test pattern...
+PLAY_8_NAME=test
+PLAY_8_FILE=C:\\Users\\ncsbr\\Documents\\Vixen 3 Christmas tree\\Sequence\\simple.tim
+
+PLAY_9_REQUEST=9
+PLAY_10_REQUEST=10
 
 PAUSE_REQUEST=pause
 PAUSE_REPLY=Pausing...
