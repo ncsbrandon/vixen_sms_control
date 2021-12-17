@@ -13,7 +13,9 @@
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="${dir.jarfile}/target/classes"/>
-            <zipfileset excludes="META-INF/*.SF" src="C:\Users\ncsbr/.m2/repository/com/twilio/sdk/twilio/8.3.0/twilio-8.3.0.jar"/>
+        	<zipfileset excludes="META-INF/*.SF" src="C:\Users\ncsbr\.m2\repository\net\java\dev\jna\jna\4.2.2\jna-4.2.2.jar"/>
+        	<zipfileset excludes="META-INF/*.SF" src="C:\Users\ncsbr\.m2\repository\com\github\purejavacomm\purejavacomm\1.0.1.RELEASE\purejavacomm-1.0.1.RELEASE.jar"/>
+        	<zipfileset excludes="META-INF/*.SF" src="C:\Users\ncsbr/.m2/repository/com/twilio/sdk/twilio/8.3.0/twilio-8.3.0.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="C:\Users\ncsbr/.m2/repository/commons-codec/commons-codec/1.15/commons-codec-1.15.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="C:\Users\ncsbr/.m2/repository/commons-io/commons-io/2.7/commons-io-2.7.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="C:\Users\ncsbr/.m2/repository/io/jsonwebtoken/jjwt-api/0.11.2/jjwt-api-0.11.2.jar"/>
