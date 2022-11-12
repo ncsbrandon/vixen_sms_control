@@ -118,7 +118,7 @@ public class VixenControl extends HTTPAPIControl {
 
 		// post
 		try {
-			logger.info("requesting: {}", name);
+			logger.info("requesting: {}", requestBody);
 			post("api/play/playSequence", requestBody.toString());
 		} catch (IOException e1) {
 			logger.error("play failure: {}", e1.getMessage());

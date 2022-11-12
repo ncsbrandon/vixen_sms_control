@@ -123,6 +123,12 @@ public class Main {
 	
 	// create a twilio reply with the contents
  	private static String createReply(String contents) {
+ 		
+ 		if(contents.length() > 25)
+ 			logger.info("replying: {}", contents.substring(0, 24));
+ 		else
+ 			logger.info("replying: {}", contents);
+ 		
 		Body body = new Body.Builder(contents)
 				.build();
 		com.twilio.twiml.messaging.Message sms = new com.twilio.twiml.messaging.Message.Builder()
