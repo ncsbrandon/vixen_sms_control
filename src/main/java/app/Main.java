@@ -5,7 +5,9 @@ import static spark.Spark.post;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Map;
 import java.util.Timer;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +60,11 @@ public class Main {
 
 			String requestBody = req.queryParamOrDefault("Body", "REQUEST_ERROR").trim();
 			logger.info("request body: {}",  requestBody);
+
+			Map<String, String> reqParams = req.params();
+			for(Entry<String, String> reqParam : reqParams.entrySet()) {
+				logger.info("param [{}]: [{}]", reqParam.getKey(), reqParam.getValue());
+			}
 			
 			if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_REQUEST))) {
 				return createReply(ac.getString(AppConfig.PLAY_MENU));
