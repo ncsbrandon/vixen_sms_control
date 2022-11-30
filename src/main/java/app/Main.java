@@ -5,9 +5,7 @@ import static spark.Spark.post;
 
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Map;
 import java.util.Timer;
-import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +41,11 @@ public class Main {
 			return;
 		}
 		
-		logger.debug("debug logging");
-		
+		logger.debug("initialize Twilio");
+		String sid = AppConfig.getInstance().getString(AppConfig.ACCOUNT_SID);
+		String auth = AppConfig.getInstance().getString(AppConfig.AUTH_TOKEN);
+		Twilio.init(sid, auth);
+				
 		logger.info("creating vixen objects");
 		vc = new VixenControl(ac.getString(AppConfig.VIXEN_URL));
 		vp = new VixenProcess();
@@ -61,10 +62,13 @@ public class Main {
 			String requestBody = req.queryParamOrDefault("Body", "REQUEST_ERROR").trim();
 			logger.info("request body: {}",  requestBody);
 
-			Map<String, String> reqParams = req.params();
-			for(Entry<String, String> reqParam : reqParams.entrySet()) {
-				logger.info("param [{}]: [{}]", reqParam.getKey(), reqParam.getValue());
-			}
+			String requestor = req.queryParamOrDefault("From", "UNKNOWN").trim();
+			logger.info("requestor: {}",  requestor);
+			
+			//Set<String> queryParams = req.queryParams();
+			//for(String queryParam : queryParams) {
+			//	logger.info("param [{}]: [{}]", queryParam, req.queryParams(queryParam));
+			//}
 			
 			if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_REQUEST))) {
 				return createReply(ac.getString(AppConfig.PLAY_MENU));
@@ -189,16 +193,20 @@ public class Main {
 	
 	// send an SMS
  	private static void sendMessage(String toPhone, String messageText) {
-		String sid = AppConfig.getInstance().getString(AppConfig.ACCOUNT_SID);
-		String auth = AppConfig.getInstance().getString(AppConfig.AUTH_TOKEN);
+		//String sid = AppConfig.getInstance().getString(AppConfig.ACCOUNT_SID);
+		//String auth = AppConfig.getInstance().getString(AppConfig.AUTH_TOKEN);
 		String fromPhone = AppConfig.getInstance().getString(AppConfig.FROM_PHONE);
-		
-		Twilio.init(sid, auth);
 
-		Message message = Message
-				.creator(new PhoneNumber(toPhone), new PhoneNumber(fromPhone), messageText)
+		try {
+			Message message = Message.creator(
+					new PhoneNumber(toPhone),
+					new PhoneNumber(fromPhone),
+					messageText)
 				.create();
-
-		logger.info("sent [{}]", message.getSid());
+			
+			logger.info("[{}] sent from [{}] to [{}]: {}", message.getSid(), toPhone, messageText);
+		} catch (Exception e) {
+			logger.error("sendMessage failure: {}", e.getMessage());
+		}	
 	}
 }
