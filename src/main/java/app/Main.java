@@ -73,25 +73,25 @@ public class Main {
 			if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_REQUEST))) {
 				return createReply(ac.getString(AppConfig.PLAY_MENU));
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_1_REQUEST))) {
-				return play(ac.getString(AppConfig.PLAY_1_NAME), ac.getString(AppConfig.PLAY_1_FILE), ac.getString(AppConfig.PLAY_1_REPLY), ac);
+				return play(ac.getString(AppConfig.PLAY_1_NAME), ac.getString(AppConfig.PLAY_1_FILE), ac.getString(AppConfig.PLAY_1_REPLY), ac, requestor);
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_2_REQUEST))) {
-				return play(ac.getString(AppConfig.PLAY_2_NAME), ac.getString(AppConfig.PLAY_2_FILE), ac.getString(AppConfig.PLAY_2_REPLY), ac);
+				return play(ac.getString(AppConfig.PLAY_2_NAME), ac.getString(AppConfig.PLAY_2_FILE), ac.getString(AppConfig.PLAY_2_REPLY), ac, requestor);
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_3_REQUEST))) {
-				return play(ac.getString(AppConfig.PLAY_3_NAME), ac.getString(AppConfig.PLAY_3_FILE), ac.getString(AppConfig.PLAY_3_REPLY), ac);
+				return play(ac.getString(AppConfig.PLAY_3_NAME), ac.getString(AppConfig.PLAY_3_FILE), ac.getString(AppConfig.PLAY_3_REPLY), ac, requestor);
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_4_REQUEST))) {
-				return play(ac.getString(AppConfig.PLAY_4_NAME), ac.getString(AppConfig.PLAY_4_FILE), ac.getString(AppConfig.PLAY_4_REPLY), ac);
+				return play(ac.getString(AppConfig.PLAY_4_NAME), ac.getString(AppConfig.PLAY_4_FILE), ac.getString(AppConfig.PLAY_4_REPLY), ac, requestor);
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_5_REQUEST))) {
-				return play(ac.getString(AppConfig.PLAY_5_NAME), ac.getString(AppConfig.PLAY_5_FILE), ac.getString(AppConfig.PLAY_5_REPLY), ac);
+				return play(ac.getString(AppConfig.PLAY_5_NAME), ac.getString(AppConfig.PLAY_5_FILE), ac.getString(AppConfig.PLAY_5_REPLY), ac, requestor);
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_6_REQUEST))) {
-				return play(ac.getString(AppConfig.PLAY_6_NAME), ac.getString(AppConfig.PLAY_6_FILE), ac.getString(AppConfig.PLAY_6_REPLY), ac);
+				return play(ac.getString(AppConfig.PLAY_6_NAME), ac.getString(AppConfig.PLAY_6_FILE), ac.getString(AppConfig.PLAY_6_REPLY), ac, requestor);
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_7_REQUEST))) {
-				return play(ac.getString(AppConfig.PLAY_7_NAME), ac.getString(AppConfig.PLAY_7_FILE), ac.getString(AppConfig.PLAY_7_REPLY), ac);
+				return play(ac.getString(AppConfig.PLAY_7_NAME), ac.getString(AppConfig.PLAY_7_FILE), ac.getString(AppConfig.PLAY_7_REPLY), ac, requestor);
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_8_REQUEST))) {
-				return play(ac.getString(AppConfig.PLAY_8_NAME), ac.getString(AppConfig.PLAY_8_FILE), ac.getString(AppConfig.PLAY_8_REPLY), ac);
+				return play(ac.getString(AppConfig.PLAY_8_NAME), ac.getString(AppConfig.PLAY_8_FILE), ac.getString(AppConfig.PLAY_8_REPLY), ac, requestor);
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_9_REQUEST))) {
-				return play(ac.getString(AppConfig.PLAY_9_NAME), ac.getString(AppConfig.PLAY_9_FILE), ac.getString(AppConfig.PLAY_9_REPLY), ac);
+				return play(ac.getString(AppConfig.PLAY_9_NAME), ac.getString(AppConfig.PLAY_9_FILE), ac.getString(AppConfig.PLAY_9_REPLY), ac, requestor);
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PLAY_10_REQUEST))) {
-				return play(ac.getString(AppConfig.PLAY_10_NAME), ac.getString(AppConfig.PLAY_10_FILE), ac.getString(AppConfig.PLAY_10_REPLY), ac);
+				return play(ac.getString(AppConfig.PLAY_10_NAME), ac.getString(AppConfig.PLAY_10_FILE), ac.getString(AppConfig.PLAY_10_REPLY), ac, requestor);
 			} else if (0 == requestBody.compareToIgnoreCase(ac.getString(AppConfig.PAUSE_REQUEST))) {
 				return pause(ac.getString(AppConfig.PAUSE_REPLY), ac);
 			}
@@ -152,7 +152,7 @@ public class Main {
 	}
 	
 	// launch a thread to play a song
-	private static String play(String name, String file, String reply, AppConfig ac) {
+	private static String play(String name, String file, String reply, AppConfig ac, String requestor) {
 		// reschedule the idle check
 		createIdleCheck(ac.getLong(AppConfig.IDLE_CHECK_MS));
 		
@@ -164,7 +164,9 @@ public class Main {
 				if(!vc.play(name, file)) {
 					logger.error("play error");
 				} else {
-					sendMessage(AppConfig.getInstance().getString(AppConfig.MY_PHONE), "Playing " + name);
+					sendMessage(
+							AppConfig.getInstance().getString(AppConfig.MY_PHONE),
+							String.format("Playing [%s] for [%s]", name, requestor));
 				}
 			}
 		}).start();
