@@ -14,6 +14,7 @@ import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.twiml.MessagingResponse;
 import com.twilio.twiml.messaging.Body;
+import com.twilio.twiml.messaging.Media;
 import com.twilio.type.PhoneNumber;
 
 import config.AppConfig;
@@ -140,7 +141,24 @@ public class Main {
  		else
  			logger.info("replying: {}", contents);
  		
-		Body body = new Body.Builder(contents)
+ 		if(contents.contains("lettuce")) {
+ 			String url = "https://uc8a3c434f5d949aeab2cca7941f.dl.dropboxusercontent.com/cd/0/inline/Bx2mgHRqmyMLvnAoMaQHPatTNoByBEeC8jq6f1PuxJC46JpIDfXh3dHyPeql36PkAoafBQBvsiVBESEO6QO_kxZM8LSUAiB2p0RxWag9kwIuK1oHfnJqrIjPoXq4AO6XZ37onuE6GleppIJA6fpU44ccig2dC3s3kbwGHHTOGTqYTg/file#";
+ 			
+	 		Media media = new Media.Builder(url)
+	 				.build();
+			Body body = new Body.Builder(contents)
+					.build();
+			com.twilio.twiml.messaging.Message sms = new com.twilio.twiml.messaging.Message.Builder()
+					.body(body)
+					.media(media)
+					.build();
+			MessagingResponse twiml = new MessagingResponse.Builder()
+					.message(sms)
+					.build();
+			return twiml.toXml();
+ 		}
+ 		
+ 		Body body = new Body.Builder(contents)
 				.build();
 		com.twilio.twiml.messaging.Message sms = new com.twilio.twiml.messaging.Message.Builder()
 				.body(body)

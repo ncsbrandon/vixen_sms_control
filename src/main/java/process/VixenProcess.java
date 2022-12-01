@@ -2,6 +2,8 @@ package process;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +61,20 @@ public class VixenProcess {
 		p.destroy();
 		logger.info("vixen stopped");
 
+		// wait for it to stop
+		try {
+			Thread.sleep(15000);
+		} catch (InterruptedException e) {
+			logger.error("start sleep interrupted: {}", e.getMessage());
+			Thread.currentThread().interrupt();
+		}
+		
+		try {
+			Files.delete(Path.of("C:\\Users\\ncsbr\\OneDrive\\Documents\\Vixen 3\\.lock"));
+		} catch (IOException e) {
+			logger.error("unable to delete the lock: {}", e.getMessage());
+		}
+		
 		p = null;
 	}
 }
