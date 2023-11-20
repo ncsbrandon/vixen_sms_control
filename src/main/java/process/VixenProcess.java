@@ -12,8 +12,8 @@ public class VixenProcess {
 
 	private static Logger logger = LoggerFactory.getLogger(VixenProcess.class.getSimpleName());
 
-	private static final String VIXEN = "C:\\Program Files\\Vixen\\VixenApplication.exe";
-	private static final String DIR = "C:\\Program Files\\Vixen\\";
+	private static final String VIXEN = "C:\\Program Files\\Vixen Lights\\Vixen\\Vixen.Application.exe";
+	private static final String DIR = "C:\\Program Files\\Vixen Lights\\Vixen\\";
 
 	private Process p = null;
 
